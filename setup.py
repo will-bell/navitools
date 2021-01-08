@@ -5,7 +5,7 @@ import sys
 from pprint import pprint
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
-from typing import *
+from typing import List
 
 # Filename for the C extension module library
 c_module_name = '_navipy'
@@ -30,7 +30,7 @@ class CMakeExtension(Extension):
 
     def __init__(self, name: str, cmake_lists_dir: str = '.', sources: List[str] = None, **kwargs):
         sources = [] if not sources else sources
-        
+
         Extension.__init__(self, name, sources=sources, **kwargs)
 
         self.cmake_lists_dir = os.path.abspath(cmake_lists_dir)
@@ -49,7 +49,7 @@ class CMakeBuild(build_ext):
         for ext in self.extensions:
             extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
             cfg = 'Debug' if _get_env_variable('DISPTOOLS_DEBUG') == 'ON' else 'Release'
-            
+
             cmake_args = [
                 '-DDISPTOOLS_PYTHON_SUPPORT=ON',
                 f'-DNAVIPY_PYTHON_CXX_MODULE_NAME={c_module_name}',
@@ -78,30 +78,30 @@ class CMakeBuild(build_ext):
 
                 # Config and build the extension
                 subprocess.check_call(
-                    ['cmake', ext.cmake_lists_dir] + cmake_args, 
+                    ['cmake', ext.cmake_lists_dir] + cmake_args,
                     cwd=self.build_temp)
                 subprocess.check_call(
-                    ['cmake', '--build', '.', '--config', cfg], 
+                    ['cmake', '--build', '.', '--config', cfg],
                     cwd=self.build_temp)
 
 
 # The following line is parsed by Sphinx
 version = '0.1.0'
 
-setup(name='navipy',
-      packages=['navipy'],
-      version=version,
-      description='Some bread-and-butter algorithms for motion planning',
-      author='William Bell',
-      author_email='wjbell97@gmail.com',
-      keywords=['path planning', 'motion planning'],
-      install_requires=['numpy>=1.15.1'],
-      ext_modules=[CMakeExtension(c_module_name)],
-      cmdclass={'build_ext': CMakeBuild},
-      zip_safe=False,
-      classifiers=[
-          "Programming Language :: Python :: 3",
-          "License :: OSI Approved :: MIT License",
-          "Operating System :: Microsoft :: Windows"
-      ],
-)
+setup(
+    name='navipy',
+    version=version,
+    description='Some bread-and-butter algorithms for motion planning',
+    author='William Bell',
+    author_email='wjbell97@gmail.com',
+    keywords=['path planning', 'motion planning'],
+    install_requires=['numpy>=1.15.1'],
+    ext_modules=[CMakeExtension(c_module_name)],
+    cmdclass={'build_ext': CMakeBuild},
+    zip_safe=False,
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: Microsoft :: Windows"
+      ]
+    )
