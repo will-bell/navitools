@@ -2,6 +2,8 @@ set(
     BINDINGS_SRCS
     ${CXX_SOURCES}
     "bind_vector.cpp"
+    "bind_geometry.cpp"
+    "bind_kd_tree.cpp"
     )
 
 # Create the module using pybind11's wrapped version of `add_library`
