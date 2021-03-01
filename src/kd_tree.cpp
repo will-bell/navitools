@@ -203,6 +203,8 @@ void kdTree::append_state(const std::vector<double>& state)
 
 kdTree::kdTree(const std::vector<std::vector<double>>& states)
 {
+    dim = states[0].size();
+
     std::vector<const std::vector<double>*> state_ptrs;
         
     for (int i = 0; i < states.size(); i++) {
@@ -214,6 +216,8 @@ kdTree::kdTree(const std::vector<std::vector<double>>& states)
 
 kdTree::kdTree(std::vector<const std::vector<double>*> states)
 {
+    dim = states[0]->size();
+
     root = build_kdTree(states);
 }
 

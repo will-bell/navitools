@@ -1,24 +1,48 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-#include <pybind11/stl_bind.h>
+#include <pybind11/eigen.h>
 #include "kd_tree.hpp"
-#include <iostream>
 
 namespace py = pybind11;
 
 // template<typename V>
 struct WrapkdTree {
 public:
-    WrapkdTree(std::vector<std::vector<double>> states) 
+    WrapkdTree(Eigen::Ref<const Eigen::MatrixXd> states)
     {
-        tree = kdTree(states);
+        std::vector<std::vector<double>> copy_states;
+        for (int i = 0; i < states.rows(); i++) {
+            std::vector<double> copy_row;
+            for (int j = 0; j < states.cols(); j++) {
+                copy_row.push_back(states(i, j));
+            }
+            copy_states.push_back(copy_row);
+        }
+
+        tree = kdTree(copy_states);
     }
 
-    std::vector<double> nearest_neighbor(std::vector<double> state) const
+    Eigen::VectorXd nearest_neighbor(Eigen::Ref<const Eigen::VectorXd> state) const
     {
-        std::vector<double> neighbor = tree.nearest_neighbor(state);
+        int dim = state.rows();
+        if (dim != tree.dim) {
+            // Raise exception: dimensions must match
+        }
 
-        return neighbor;
+        std::vector<double> copy_state;
+        for (int i = 0; i < state.rows(); i++) {
+            copy_state.push_back(state(i));
+        }
+
+        std::vector<double> neighbor = tree.nearest_neighbor(copy_state);
+
+        Eigen::VectorXd array_neighbor(dim);
+
+        for (int i = 0; i < neighbor.size(); i++) {
+            array_neighbor(i) = neighbor[i];
+        }
+        
+        return array_neighbor;
     }
 
     int count_states() const 
@@ -38,7 +62,7 @@ private:
 void init_kd_tree(py::module_ &m)
 {
     py::class_<WrapkdTree>(m, "KD_Tree")
-        .def(py::init<std::vector<std::vector<double>>>())
+        .def(py::init<Eigen::Ref<const Eigen::MatrixXd>>())
         .def("nearest_neighbor", &WrapkdTree::nearest_neighbor)
         .def("count_states", &WrapkdTree::count_states)
         .def("at_depth", &WrapkdTree::at_depth);

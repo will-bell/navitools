@@ -1,11 +1,11 @@
-from _navipy import KD_Tree, Vector2
+from _navipy import KD_Tree
 from typing import List
 import numpy as np
 import math
 
 
-def generate_test_points(n: int = 1_000, min_val: float = -100, max_val: float = 100) -> List[Vector2]:
-    return [list(point) for point in np.random.uniform(min_val, max_val, (n, 2))]
+def generate_test_points(n: int = 1_000, min_val: float = -100, max_val: float = 100) -> np.ndarray:
+    return np.random.uniform(min_val, max_val, (n, 2))
 
 
 def test_build_tree():
@@ -38,4 +38,4 @@ def test_tree_nearest_neighbor():
     # KD Tree nearest neighbor search
     tree_nearest = tree.nearest_neighbor(test_point)
 
-    assert tree_nearest == nearest
+    assert np.all(tree_nearest == nearest)

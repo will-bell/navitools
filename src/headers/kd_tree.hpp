@@ -18,6 +18,8 @@ public:
     kdTree(const std::vector<std::vector<double>>& states);
     kdTree(std::vector<const std::vector<double>*> state_ptrs);
 
+    int dim;
+
     void append_state(const std::vector<double>& state);
 
     std::vector<double> nearest_neighbor(const std::vector<double>& search_state) const;
