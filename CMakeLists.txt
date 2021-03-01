@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.13)
 
 project(navipy LANGUAGES CXX)
 
@@ -9,6 +9,10 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
 
 set(NAVIPY_PY_CXX_MODULE_NAME "_navipy" CACHE STRING "Name of the C++ extension module file")
+
+# Find Eigen so it can be linked to the targets
+set(EIGEN3_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/extern/eigen")
+find_package(Eigen3 REQUIRED)
 
 # Directory of C++ files for the library
 set(CXX_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)

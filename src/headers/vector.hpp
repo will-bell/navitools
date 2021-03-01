@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <Eigen/Dense>
 
 class BaseVector {
 public:

@@ -10,3 +10,6 @@ add_library(navipy STATIC ${CXX_SOURCES})
 
 # Headers are in the subdirectory
 target_include_directories(navipy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/headers)
+
+# Include the Eigen headers
+target_link_libraries(navipy Eigen3::Eigen)
