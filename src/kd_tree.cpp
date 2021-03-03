@@ -1,14 +1,14 @@
 #include "kd_tree.hpp"
-#include <iostream>
+#include <algorithm>
 #include <numeric>
-
-
-using vector2d = std::vector<const std::vector<double>*>;
-using vector2diterator = vector2d::iterator;
+#include <exception>
 
 using kdNode_ptr = std::shared_ptr<kdNode>;
 
-kdNode_ptr build_kdTree(vector2diterator begin, vector2diterator end, int size, int depth)
+/* Algorithm Implementation */
+
+kdNode_ptr build_kdTree(std::vector<Eigen::VectorXd>::iterator begin, std::vector<Eigen::VectorXd>::iterator end, 
+    int size, int depth)
 {
     if (!std::distance(begin, end))
         return kdNode_ptr();
@@ -17,9 +17,9 @@ kdNode_ptr build_kdTree(vector2diterator begin, vector2diterator end, int size, 
 
     // Sort the slice
     std::sort(begin, end, 
-        [axis](const std::vector<double>* a, const std::vector<double>* b) 
+        [axis](const Eigen::VectorXd& a, const Eigen::VectorXd& b) 
         { 
-            return (*a)[axis] < (*b)[axis];
+            return a[axis] < b[axis];
         });
 
     // Get the median
@@ -33,24 +33,21 @@ kdNode_ptr build_kdTree(vector2diterator begin, vector2diterator end, int size, 
 
     root->left = left;
     root->right = right;
-    root->state = **(begin + median);
+    root->state = *(begin + median);
 
     return root;
 }
 
-kdNode_ptr build_kdTree(vector2d& states)
+kdNode_ptr build_kdTree(std::vector<Eigen::VectorXd>& states, int size)
 {
-    // All states should have the same size
-    int size = states[0]->size();
-
     // Start with the first dimension
     int axis = 0;
 
     // Sort the points
     std::sort(states.begin(), states.end(), 
-        [axis](const std::vector<double>* a, const std::vector<double>* b)
+        [axis](const Eigen::VectorXd& a, const Eigen::VectorXd& b)
         { 
-            return (*a)[axis] < (*b)[axis];
+            return a[axis] < b[axis];
         });
 
     // Get the median
@@ -64,12 +61,12 @@ kdNode_ptr build_kdTree(vector2d& states)
 
     root->left = left;
     root->right = right;
-    root->state = **(states.begin() + median);
+    root->state = *(states.begin() + median);
 
     return root;
 }
 
-void kdTree_append_state(const std::vector<double>& state, kdNode_ptr root, int depth = 0)
+void kdTree_append_state(const Eigen::VectorXd& state, kdNode_ptr root, int depth = 0)
 {
     int axis = depth % state.size();
 
@@ -141,27 +138,23 @@ std::vector<kdNode_ptr> kdTree_at_depth(kdNode_ptr kd_tree, int desired_depth)
     return nodes;
 }
 
-double square_distance(const std::vector<double> u, const std::vector<double> v)
+double square_distance(const Eigen::VectorXd& u, const Eigen::VectorXd& v)
 {
     if (u.size() != v.size()) {
         // Raise exception: vectors must have the same size
     }
 
-    double mag = 0.;
+    Eigen::VectorXd diff = u - v;
 
-    for (int i = 0; i < u.size(); ++i) {
-        double d = u[i] - v[i];
-        mag += std::pow(d, 2);
-    }
-
-    return mag;
+    return diff.dot(diff);
 }
 
-void kdTree_nearest_neighbor(kdNode_ptr root, const std::vector<double>& search_state, int depth, double& best_distance, kdNode_ptr& best_node)
+void kdTree_nearest_neighbor(kdNode_ptr root, const Eigen::VectorXd& search_state, int depth, double& best_distance, kdNode_ptr& best_node)
 {
     int axis = depth % search_state.size();
 
     double dist = square_distance(search_state, root->state);
+
     if (dist < best_distance) {
         best_distance = dist;
         best_node = root;
@@ -183,7 +176,7 @@ void kdTree_nearest_neighbor(kdNode_ptr root, const std::vector<double>& search_
     }
 }
 
-std::vector<double> kdTree_nearest_neighbor(kdNode_ptr kd_tree, const std::vector<double>& search_state)
+Eigen::VectorXd kdTree_nearest_neighbor(kdNode_ptr kd_tree, const Eigen::VectorXd& search_state)
 {
     double best_distance = std::numeric_limits<double>::max();
     kdNode_ptr best_node = nullptr;
@@ -193,39 +186,63 @@ std::vector<double> kdTree_nearest_neighbor(kdNode_ptr kd_tree, const std::vecto
     return best_node->state;
 }
 
-void kdTree::append_state(const std::vector<double>& state)
+/* CLASS IMPLEMENTATION */
+
+kdTree::kdTree(const std::vector<Eigen::VectorXd>& states)
 {
+    state_size = states[0].size();
+    std::vector<Eigen::VectorXd> copy_states;
+
+    for (auto state : states) {
+        if (state.size() != state_size) {
+            throw VaryingStateSizeException{};
+        }
+        copy_states.push_back(state);
+    }
+
+    root = build_kdTree(copy_states, state_size);
+}
+
+kdTree::kdTree(const Eigen::MatrixXd& states)
+{
+    state_size = states.cols();
+
+    std::vector<Eigen::VectorXd> copy_states;
+
+    for (int i = 0; i < states.rows(); i++) {
+        copy_states.push_back(states.row(i));
+    }
+
+    root = build_kdTree(copy_states, state_size);
+}
+
+kdTree::kdTree(Eigen::Ref<const Eigen::MatrixXd> states)
+{
+    state_size = states.cols();
+
+    std::vector<Eigen::VectorXd> copy_states;
+
+    for (int i = 0; i < states.rows(); i++) {
+        copy_states.push_back(states.row(i));
+    }
+
+    root = build_kdTree(copy_states, state_size);
+}
+
+void kdTree::append_state(const Eigen::VectorXd& state)
+{
+    if (state.size() != state_size) {
+        throw BadStateSizeException{};
+    }
+
     kdTree_append_state(state, root);
 }
 
-
-/* CLASS IMPLEMENTATION */
-
-kdTree::kdTree(const std::vector<std::vector<double>>& states)
-{
-    dim = states[0].size();
-
-    std::vector<const std::vector<double>*> state_ptrs;
-        
-    for (int i = 0; i < states.size(); i++) {
-        state_ptrs.push_back(&(states[i]));
-    }
-
-    root = build_kdTree(state_ptrs);
-}
-
-kdTree::kdTree(std::vector<const std::vector<double>*> states)
-{
-    dim = states[0]->size();
-
-    root = build_kdTree(states);
-}
-
-std::vector<std::vector<double>> kdTree::at_depth(int depth) const
+std::vector<Eigen::VectorXd> kdTree::at_depth(int depth) const
 {
     std::vector<kdNode_ptr> nodes = kdTree_at_depth(root, depth);
 
-    std::vector<std::vector<double>> states;
+    std::vector<Eigen::VectorXd> states;
     for (auto node : nodes) {
         states.push_back(node->state);
     }
@@ -233,15 +250,19 @@ std::vector<std::vector<double>> kdTree::at_depth(int depth) const
     return states;
 }
 
-std::vector<double> kdTree::nearest_neighbor(const std::vector<double>& search_state) const
+Eigen::VectorXd kdTree::nearest_neighbor(const Eigen::VectorXd& search_state) const
 {
+    if (search_state.size() != state_size) {
+        throw BadStateSizeException{};
+    }
+
     return kdTree_nearest_neighbor(root, search_state);
 }
 
 int kdTree::count_states() const
 {
     int depth = 0;
-    std::vector<std::vector<double>> this_level = at_depth(depth);
+    std::vector<Eigen::VectorXd> this_level = at_depth(depth);
 
     int n_states = 0;
     while (this_level.size()) {
