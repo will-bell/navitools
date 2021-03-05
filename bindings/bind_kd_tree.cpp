@@ -1,7 +1,6 @@
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 #include <pybind11/eigen.h>
-#include <exception>
 #include "kd_tree.hpp"
 
 namespace py = pybind11;
@@ -13,11 +12,14 @@ public:
         tree = kdTree(states);
     }
 
+    void append_state(Eigen::Ref<const Eigen::VectorXd> state)
+    {
+        tree.append_state(state);
+    }
+
     Eigen::VectorXd nearest_neighbor(Eigen::Ref<const Eigen::VectorXd> state) const
     {
-        Eigen::VectorXd neighbor = tree.nearest_neighbor(state);
-
-        return neighbor;
+        return tree.nearest_neighbor(state);
     }
 
     int count_states() const 
@@ -27,16 +29,7 @@ public:
 
     Eigen::MatrixXd at_depth(int depth) const
     {
-        std::vector<Eigen::VectorXd> states = tree.at_depth(depth);
-
-        int n_states = states.size();
-
-        Eigen::MatrixXd stacked_states(n_states, tree.state_size);
-        
-        for (int i = 0; i < n_states; i++)
-            stacked_states.row(i) = states[i];
-
-        return stacked_states;
+        return tree.at_depth(depth);
     }
 
 private:
@@ -47,9 +40,11 @@ void init_kd_tree(py::module_ &m)
 {
     py::class_<WrapkdTree>(m, "KD_Tree")
         .def(py::init<Eigen::Ref<const Eigen::MatrixXd>>())
+        .def("append_state", &WrapkdTree::append_state)
         .def("nearest_neighbor", &WrapkdTree::nearest_neighbor)
         .def("count_states", &WrapkdTree::count_states)
         .def("at_depth", &WrapkdTree::at_depth);
     
     py::register_exception<BadStateSizeException>(m, "BadStateSizeException");
+    py::register_exception<EmptyTreeException>(m, "EmptyTreeException");
 }

@@ -205,72 +205,92 @@ kdTree::kdTree(const std::vector<Eigen::VectorXd>& states)
 
 kdTree::kdTree(const Eigen::MatrixXd& states)
 {
-    state_size = states.cols();
+    if (states.rows()) {
+        state_size = states.cols();
 
-    std::vector<Eigen::VectorXd> copy_states;
+        std::vector<Eigen::VectorXd> copy_states;
 
-    for (int i = 0; i < states.rows(); i++) {
-        copy_states.push_back(states.row(i));
+        for (int i = 0; i < states.rows(); i++) {
+            copy_states.push_back(states.row(i));
+        }
+
+        root = build_kdTree(copy_states, state_size);
     }
-
-    root = build_kdTree(copy_states, state_size);
-}
-
-kdTree::kdTree(Eigen::Ref<const Eigen::MatrixXd> states)
-{
-    state_size = states.cols();
-
-    std::vector<Eigen::VectorXd> copy_states;
-
-    for (int i = 0; i < states.rows(); i++) {
-        copy_states.push_back(states.row(i));
-    }
-
-    root = build_kdTree(copy_states, state_size);
 }
 
 void kdTree::append_state(const Eigen::VectorXd& state)
 {
-    if (state.size() != state_size) {
-        throw BadStateSizeException{};
-    }
+    if (root) {
+        if (state.size() != state_size)
+            throw BadStateSizeException{};
 
-    kdTree_append_state(state, root);
+        kdTree_append_state(state, root);
+    }
+    else {
+        state_size = state.size();
+
+        root = std::make_shared<kdNode>();
+        root->state = state;
+    }
 }
 
-std::vector<Eigen::VectorXd> kdTree::at_depth(int depth) const
+Eigen::MatrixXd kdTree::at_depth(int depth) const
 {
-    std::vector<kdNode_ptr> nodes = kdTree_at_depth(root, depth);
+    if (root) {
+        std::vector<kdNode_ptr> nodes = kdTree_at_depth(root, depth);
 
-    std::vector<Eigen::VectorXd> states;
-    for (auto node : nodes) {
-        states.push_back(node->state);
+        std::vector<Eigen::VectorXd> states;
+        for (auto node : nodes) {
+            states.push_back(node->state);
+        }
+
+        int n_states = states.size();
+
+        Eigen::MatrixXd stacked_states(n_states, state_size);
+        
+        for (int i = 0; i < n_states; i++)
+            stacked_states.row(i) = states[i];
+
+        return stacked_states;
     }
+    else {
+        Eigen::MatrixXd empty(0, 0);
 
-    return states;
+        return empty;
+    }
 }
 
 Eigen::VectorXd kdTree::nearest_neighbor(const Eigen::VectorXd& search_state) const
 {
-    if (search_state.size() != state_size) {
-        throw BadStateSizeException{};
-    }
+    if (root) {
+        if (search_state.size() != state_size) {
+            throw BadStateSizeException{};
+        }
 
-    return kdTree_nearest_neighbor(root, search_state);
+        return kdTree_nearest_neighbor(root, search_state);
+    }
+    else {
+        throw EmptyTreeException{};
+    }
 }
 
 int kdTree::count_states() const
 {
-    int depth = 0;
-    std::vector<Eigen::VectorXd> this_level = at_depth(depth);
+    if (root) {
+        int depth = 0;
+        std::vector<kdNode_ptr> this_level = kdTree_at_depth(root, depth);
 
-    int n_states = 0;
-    while (this_level.size()) {
-        n_states += this_level.size();
-        
-        depth++;
-        this_level = at_depth(depth);
+        int n_states = 0;
+        while (this_level.size()) {
+            n_states += this_level.size();
+            
+            depth++;
+            this_level = kdTree_at_depth(root, depth);
+        }
+
+        return n_states;
     }
-
-    return n_states;
+    else {
+        return 0;
+    }
 }

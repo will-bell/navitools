@@ -1,4 +1,4 @@
-from _navipy import KD_Tree
+from _navipy import KD_Tree, BadStateSizeException, EmptyTreeException
 from typing import List
 import numpy as np
 import math
@@ -9,16 +9,16 @@ def generate_test_points(n: int = 1_000, min_val: float = -100, max_val: float =
 
 
 def test_build_tree():
-    point_list = generate_test_points(n=1_000)
-    tree = KD_Tree(point_list)
+    points = generate_test_points(n=1_000)
+    tree = KD_Tree(points)
 
     assert tree.count_states() == 1_000
 
 
 def test_tree_nearest_neighbor():
-    point_list = generate_test_points(n=1_000)
+    points = generate_test_points(n=1_000)
 
-    tree = KD_Tree(point_list)
+    tree = KD_Tree(points)
 
     test_point = [0., 0.]
 
@@ -26,9 +26,9 @@ def test_tree_nearest_neighbor():
         return math.sqrt((test_point[0] - point[0])**2 + (test_point[1] - point[1])**2)
 
     # Brute force search for the true nearest neighbor
-    nearest = point_list[0]
+    nearest = points[0]
     nearest_distance = distance(nearest)
-    for p in point_list[1:]:
+    for p in points[1:]:
         dist = distance(p)
 
         if dist < nearest_distance:
@@ -39,3 +39,42 @@ def test_tree_nearest_neighbor():
     tree_nearest = tree.nearest_neighbor(test_point)
 
     assert np.all(tree_nearest == nearest)
+
+
+def test_tree_append_states():
+    tree = KD_Tree(np.array([]))
+
+    points = list(generate_test_points(n=100))
+
+    for point in points:
+        tree.append_state(point)
+
+    assert tree.count_states() == 100
+
+
+def test_tree_exceptions():
+    points = generate_test_points(n=10)
+    tree = KD_Tree(points)
+
+    try:
+        tree.nearest_neighbor(np.array([1., 2., 3.]))
+        assert False, "Failed to catch BadStateSizeException"
+
+    except(BadStateSizeException):
+        pass
+
+    try:
+        tree.append_state(np.array([1., 2., 3.]))
+        assert False, "Failed to catch BadStateSizeException"
+
+    except(BadStateSizeException):
+        pass
+
+    tree = KD_Tree(np.array([]))
+
+    try:
+        tree.nearest_neighbor(np.array([1., 2.]))
+        assert False, "Failed to catch EmptyTreeException"
+
+    except EmptyTreeException:
+        pass

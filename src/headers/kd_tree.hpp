@@ -22,6 +22,14 @@ struct BadStateSizeException : public std::exception
     }
 };
 
+struct EmptyTreeException : public std::exception
+{
+    const char* what() const throw()
+    {
+        return "Cannot perform this operation on an empty tree.";
+    }
+};
+
 /* Tree Node Class */
 
 struct kdNode {
@@ -38,7 +46,7 @@ public:
     kdTree() {};
     kdTree(const std::vector<Eigen::VectorXd>& states);
     kdTree(const Eigen::MatrixXd& states);
-    kdTree(Eigen::Ref<const Eigen::MatrixXd> states);
+    // kdTree(Eigen::Ref<const Eigen::MatrixXd> states);
 
     int state_size;
 
@@ -46,7 +54,7 @@ public:
 
     Eigen::VectorXd nearest_neighbor(const Eigen::VectorXd& search_state) const;
 
-    std::vector<Eigen::VectorXd> at_depth(int depth) const;
+    Eigen::MatrixXd at_depth(int depth) const;
 
     int count_states() const;
 
