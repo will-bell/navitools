@@ -9,16 +9,24 @@ def generate_test_points(n: int = 1_000, min_val: float = -100, max_val: float =
 
 
 def test_build_tree():
-    points = generate_test_points(n=1_000)
+    points = generate_test_points(n=100)
+
+    # With the constructor
     tree = KD_Tree(points)
 
-    assert tree.count_states() == 1_000
+    assert tree.count_states() == 100
+
+    # Building iteratively
+    tree = KD_Tree(np.array([]))
+
+    for point in points:
+        tree.append_state(point)
+
+    assert tree.count_states() == 100
 
 
 def test_tree_nearest_neighbor():
     points = generate_test_points(n=1_000)
-
-    tree = KD_Tree(points)
 
     test_point = [0., 0.]
 
@@ -35,21 +43,20 @@ def test_tree_nearest_neighbor():
             nearest = p
             nearest_distance = dist
 
-    # KD Tree nearest neighbor search
-    tree_nearest = tree.nearest_neighbor(test_point)
+    # With the constructor
+    tree = KD_Tree(points)
 
+    tree_nearest = tree.nearest_neighbor(test_point)
     assert np.all(tree_nearest == nearest)
 
-
-def test_tree_append_states():
+    # Building iteratively
     tree = KD_Tree(np.array([]))
-
-    points = list(generate_test_points(n=100))
 
     for point in points:
         tree.append_state(point)
 
-    assert tree.count_states() == 100
+    tree_nearest = tree.nearest_neighbor(test_point)
+    assert np.all(tree_nearest == nearest)
 
 
 def test_tree_exceptions():
