@@ -1,7 +1,6 @@
 from _navipy import KD_Tree, BadStateSizeException, EmptyTreeException
 from typing import List
 import numpy as np
-import math
 
 
 def generate_test_points(n: int = 1_000, min_val: float = -100, max_val: float = 100) -> np.ndarray:
@@ -30,14 +29,14 @@ def test_tree_nearest_neighbor():
 
     test_point = [0., 0.]
 
-    def distance(point: List[float]) -> float:
-        return math.sqrt((test_point[0] - point[0])**2 + (test_point[1] - point[1])**2)
+    def square_distance(point: List[float]) -> float:
+        return (test_point[0] - point[0])**2 + (test_point[1] - point[1])**2
 
     # Brute force search for the true nearest neighbor
     nearest = points[0]
-    nearest_distance = distance(nearest)
+    nearest_distance = square_distance(nearest)
     for p in points[1:]:
-        dist = distance(p)
+        dist = square_distance(p)
 
         if dist < nearest_distance:
             nearest = p
