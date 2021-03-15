@@ -1,7 +1,8 @@
-#include "kd_tree.hpp"
 #include <algorithm>
 #include <numeric>
 #include <exception>
+#include "kd_tree.hpp"
+#include "exceptions.hpp"
 
 using kdNode_ptr = std::shared_ptr<kdNode>;
 
@@ -140,10 +141,6 @@ std::vector<kdNode_ptr> kdTree_at_depth(kdNode_ptr kd_tree, int desired_depth)
 
 double square_distance(const Eigen::VectorXd& u, const Eigen::VectorXd& v)
 {
-    if (u.size() != v.size()) {
-        // Raise exception: vectors must have the same size
-    }
-
     Eigen::VectorXd diff = u - v;
 
     return diff.dot(diff);

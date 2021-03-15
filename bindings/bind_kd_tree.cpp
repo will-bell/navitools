@@ -2,6 +2,7 @@
 #include <pybind11/stl.h>
 #include <pybind11/eigen.h>
 #include "kd_tree.hpp"
+#include "exceptions.hpp"
 
 namespace py = pybind11;
 

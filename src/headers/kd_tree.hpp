@@ -4,21 +4,13 @@
 #include <vector>
 #include <Eigen/Core>
 
-/* Custom Exception for disagreeing dimensions */
+/* Custom exceptions for the k-d tree*/
 
 struct VaryingStateSizeException : public std::exception
 {
     const char* what() const throw()
     {
         return "Cannot build a tree with varying state sizes.";
-    }
-};
-
-struct BadStateSizeException : public std::exception
-{
-    const char* what() const throw()
-    {
-        return "Given state does not have the same size as tree's state.";
     }
 };
 
@@ -46,7 +38,6 @@ public:
     kdTree() {};
     kdTree(const std::vector<Eigen::VectorXd>& states);
     kdTree(const Eigen::MatrixXd& states);
-    // kdTree(Eigen::Ref<const Eigen::MatrixXd> states);
 
     int state_size;
 

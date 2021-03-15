@@ -4,6 +4,7 @@ set(
     "bind_vector.cpp"
     "bind_geometry.cpp"
     "bind_kd_tree.cpp"
+    "bind_roadmap.cpp"
     )
 
 # Create the module using pybind11's wrapped version of `add_library`
