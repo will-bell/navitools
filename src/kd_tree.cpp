@@ -183,6 +183,102 @@ Eigen::VectorXd kdTree_nearest_neighbor(kdNode_ptr kd_tree, const Eigen::VectorX
     return best_node->state;
 }
 
+struct kNearest {
+    kNearest(int k) {
+        _k = k;
+
+        for (int i = 0; i < k; i++) {
+            dist_list.push_back(std::numeric_limits<double>::max());
+            node_list.push_back(nullptr);
+        }
+    }
+
+    int _k;
+    int len;
+    std::vector<double> dist_list;
+    std::vector<kdNode_ptr> node_list;
+
+    void insert(double value, kdNode_ptr node) {
+        std::vector<double>::iterator dit = dist_list.begin();
+        std::vector<kdNode_ptr>::iterator nit = node_list.begin();
+
+        for (int i = 0; i < _k; i++) {
+            if (value < dist_list[i]) {
+                dist_list.insert(dit + i, value);
+                dist_list.pop_back();
+
+                node_list.insert(nit + i, node);
+                node_list.pop_back();
+
+                break;
+            }
+        }
+    }
+
+    double bottom_distance() {
+        return dist_list.back();
+    }
+
+    kdNode_ptr bottom_node() {
+        return node_list.back();
+    }
+
+    Eigen::MatrixXd states() const {
+        // Assuming all states have the same size
+        Eigen::MatrixXd _states(_k, node_list[0]->state.size());
+
+        for (int i = 0; i < _k; i++)
+            _states.row(i) = node_list[i]->state;
+
+        return _states;
+    }  
+};
+
+void kdTree_k_nearest_neighbors(kdNode_ptr root, const Eigen::VectorXd& search_state, int depth, kNearest& nearest)
+{
+    int axis = depth % search_state.size();
+
+    double dist = square_distance(search_state, root->state);
+
+    if (dist < nearest.bottom_distance()) {
+        nearest.insert(dist, root);
+    }
+
+    if (search_state[axis] < root->state[axis]) {
+        if (root->left) {
+            kdTree_k_nearest_neighbors(root->left, search_state, depth + 1, nearest);
+
+            if (std::pow(search_state[axis] - root->state[axis], 2) < nearest.bottom_distance() && root->right) {
+                kdTree_k_nearest_neighbors(root->right, search_state, depth + 1, nearest);
+            }
+        }
+        else if (root->right) {
+            kdTree_k_nearest_neighbors(root->right, search_state, depth + 1, nearest);
+        }
+    }
+    else if(search_state[axis] > root->state[axis]) {
+        if (root->right) {
+            kdTree_k_nearest_neighbors(root->right, search_state, depth + 1, nearest);
+
+            if (std::pow(search_state[axis] - root->state[axis], 2) < nearest.bottom_distance() && root->left) {
+                kdTree_k_nearest_neighbors(root->left, search_state, depth + 1, nearest);
+            }
+        }
+        else if (root->left) {
+            kdTree_k_nearest_neighbors(root->left, search_state, depth + 1, nearest);
+        }
+    }
+}
+
+Eigen::MatrixXd kdTree_k_nearest_neighbors(kdNode_ptr kd_tree, const Eigen::VectorXd& search_state, int k)
+{
+    kNearest nearest = kNearest{k};
+
+    kdTree_k_nearest_neighbors(kd_tree, search_state, 0, nearest);
+
+    return nearest.states();
+}
+
 /* CLASS IMPLEMENTATION */
 
 kdTree::kdTree(const std::vector<Eigen::VectorXd>& states)
@@ -265,6 +361,20 @@ Eigen::VectorXd kdTree::nearest_neighbor(const Eigen::VectorXd& search_state) co
         }
 
         return kdTree_nearest_neighbor(root, search_state);
+    }
+    else {
+        throw EmptyTreeException{};
+    }
+}
+
+Eigen::MatrixXd kdTree::k_nearest_neighbors(const Eigen::VectorXd& search_state, int k) const
+{
+    if (root) {
+        if (search_state.size() != state_size) {
+            throw BadStateSizeException{};
+        }
+
+        return kdTree_k_nearest_neighbors(root, search_state, k);
     }
     else {
         throw EmptyTreeException{};

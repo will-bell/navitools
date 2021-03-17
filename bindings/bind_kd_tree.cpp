@@ -23,6 +23,11 @@ public:
         return tree.nearest_neighbor(state);
     }
 
+    Eigen::MatrixXd k_nearest_neighbors(Eigen::Ref<const Eigen::MatrixXd> state, int k) const
+    {
+        return tree.k_nearest_neighbors(state, k);
+    }
+
     int count_states() const 
     {
         return tree.count_states();
@@ -43,6 +48,7 @@ void init_kd_tree(py::module_ &m)
         .def(py::init<Eigen::Ref<const Eigen::MatrixXd>>())
         .def("append_state", &WrapkdTree::append_state)
         .def("nearest_neighbor", &WrapkdTree::nearest_neighbor)
+        .def("k_nearest_neighbors", &WrapkdTree::k_nearest_neighbors)
         .def("count_states", &WrapkdTree::count_states)
         .def("at_depth", &WrapkdTree::at_depth);
     

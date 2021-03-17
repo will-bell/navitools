@@ -66,9 +66,8 @@ std::vector<RoadmapNode> Roadmap::nodes() const
 {
     std::vector<RoadmapNode> nodeVector;
 
-    for (auto it = roadmap.begin(); it != roadmap.end(); ++it) {
+    for (auto it = roadmap.begin(); it != roadmap.end(); ++it)
         nodeVector.push_back(it->second);
-    }
 
     return nodeVector;
 }

@@ -45,6 +45,8 @@ public:
 
     Eigen::VectorXd nearest_neighbor(const Eigen::VectorXd& search_state) const;
 
+    Eigen::MatrixXd k_nearest_neighbors(const Eigen::VectorXd& search_state, int k) const;
+
     Eigen::MatrixXd at_depth(int depth) const;
 
     int count_states() const;
