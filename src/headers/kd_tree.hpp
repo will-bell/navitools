@@ -35,11 +35,12 @@ struct kdNode {
 
 class kdTree {
 public:
-    kdTree() {};
+    kdTree() {n_states = 0;}
     kdTree(const std::vector<Eigen::VectorXd>& states);
     kdTree(const Eigen::MatrixXd& states);
 
     int state_size;
+    int n_states;
 
     void append_state(const Eigen::VectorXd& state);
 

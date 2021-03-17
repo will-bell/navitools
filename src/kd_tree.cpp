@@ -194,7 +194,6 @@ struct kNearest {
     }
 
     int _k;
-    int len;
     std::vector<double> dist_list;
     std::vector<kdNode_ptr> node_list;
 
@@ -284,6 +283,8 @@ Eigen::MatrixXd kdTree_k_nearest_neighbors(kdNode_ptr kd_tree, const Eigen::Vect
 kdTree::kdTree(const std::vector<Eigen::VectorXd>& states)
 {
     state_size = states[0].size();
+    n_states = states.size();
+
     std::vector<Eigen::VectorXd> copy_states;
 
     for (auto state : states) {
@@ -300,6 +301,7 @@ kdTree::kdTree(const Eigen::MatrixXd& states)
 {
     if (states.rows()) {
         state_size = states.cols();
+        n_states = states.rows();
 
         std::vector<Eigen::VectorXd> copy_states;
 
@@ -317,10 +319,13 @@ void kdTree::append_state(const Eigen::VectorXd& state)
         if (state.size() != state_size)
             throw BadStateSizeException{};
 
+        n_states++;
+        
         kdTree_append_state(state, root);
     }
     else {
         state_size = state.size();
+        n_states = 1;
 
         root = std::make_shared<kdNode>();
         root->state = state;
@@ -373,8 +378,8 @@ Eigen::MatrixXd kdTree::k_nearest_neighbors(const Eigen::VectorXd& search_state,
         if (search_state.size() != state_size) {
             throw BadStateSizeException{};
         }
-
-        return kdTree_k_nearest_neighbors(root, search_state, k);
+        
+        return kdTree_k_nearest_neighbors(root, search_state, std::min(n_states, k));
     }
     else {
         throw EmptyTreeException{};

@@ -1,11 +1,9 @@
-from _navipy import KD_Tree, BadStateSizeException, EmptyTreeException
 from typing import List, Optional
+
 import numpy as np
+from _navipy import KD_Tree, BadStateSizeException, EmptyTreeException
+
 from test.common import generate_test_points
-
-
-# def generate_test_points(n: int = 1_000, min_val: float = -100, max_val: float = 100) -> np.ndarray:
-#     return np.random.uniform(min_val, max_val, (n, 2))
 
 
 def test_build_tree():

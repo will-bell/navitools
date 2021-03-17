@@ -46,6 +46,13 @@ public:
 
     void add_node(const Eigen::VectorXd& state, const Eigen::MatrixXd& neighborStates, const Eigen::VectorXd& neighborCosts);
 
+    RoadmapNode node_at(const Eigen::VectorXd& state) const;
+    RoadmapNode node_nearest(const Eigen::VectorXd& state) const;
+    std::vector<RoadmapNode> k_nodes_nearest(const Eigen::VectorXd& state, int k) const;
+
+    Eigen::VectorXd state_nearest(const Eigen::VectorXd& state) const;
+    Eigen::MatrixXd k_states_nearest(const Eigen::VectorXd& state, int k) const;
+
     std::vector<RoadmapNode> nodes() const;
 
 private:
