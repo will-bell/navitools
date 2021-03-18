@@ -1,6 +1,5 @@
 # Make a list of all the source files to add to the library
 set(CXX_SOURCES
-    "vector.cpp"
     "geometry.cpp"
     "kd_tree.cpp"
     "roadmap.cpp"

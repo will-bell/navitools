@@ -1,5 +1,4 @@
 #include <pybind11/pybind11.h>
-#include <pybind11/stl.h>
 #include <pybind11/eigen.h>
 #include "kd_tree.hpp"
 #include "exceptions.hpp"
@@ -10,7 +9,7 @@ struct WrapkdTree {
 public:
     WrapkdTree(Eigen::Ref<const Eigen::MatrixXd> states)
     {
-        tree = kdTree(states);
+        tree = kdTree{states};
     }
 
     void append_state(Eigen::Ref<const Eigen::VectorXd> state)
