@@ -1,7 +1,7 @@
 import numpy as np
 from _navipy import RoadMap
 
-from test.common import generate_test_points
+from tests.common import generate_test_points
 
 
 def test_roadmap_instantiation():
