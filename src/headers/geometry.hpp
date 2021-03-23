@@ -44,3 +44,4 @@ public:
 };
 
 bool inside_polygon(const Eigen::Vector2d& point, const Polygon& polygon);
+bool inside_any_polygon(const Eigen::Vector2d& point, const std::vector<Polygon>& polygons);

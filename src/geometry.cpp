@@ -102,3 +102,12 @@ bool inside_polygon(const Eigen::Vector2d& point, const Polygon& polygon)
 
     return wn == 0;
 }
+
+bool inside_any_polygon(const Eigen::Vector2d& point, const std::vector<Polygon>& polygons)
+{
+    for (auto polygon : polygons) {
+        if (inside_polygon(point, polygon))
+            return true;
+    }
+    return false;
+}

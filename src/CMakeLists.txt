@@ -3,6 +3,7 @@ set(CXX_SOURCES
     "geometry.cpp"
     "kd_tree.cpp"
     "roadmap.cpp"
+    "search_space.cpp"
 )
 
 # Create the library
