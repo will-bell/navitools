@@ -12,8 +12,8 @@ void init_geometry(py::module_ &m)
         .def_property_readonly("points", &Polygon::points)
         .def_property_readonly("n_points", &Polygon::n_points)
         .def_property_readonly("orientation", &Polygon::orientation)
-        .def_property_readonly("solid", &Polygon::solid)
-        .def_property_readonly("hollow", &Polygon::hollow)
+        .def_property_readonly("is_solid", &Polygon::is_solid)
+        .def_property_readonly("is_hollow", &Polygon::is_hollow)
         .def("__getitem__", [](const Polygon& polygon, int i) {return polygon[i];});
 
     m.def("inside_polygon", &inside_polygon);

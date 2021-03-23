@@ -62,9 +62,9 @@ int polygon_orientation(const Eigen::MatrixX2d& points)
     }
 
     if (rmin == 0)
-        return is_left(points.row(points.rows() - 1), points.row(0), points.row(1));
+        return triangle_orientation(points.row(points.rows() - 1), points.row(0), points.row(1));
     
-    return is_left(points.row(rmin - 1), points.row(rmin), points.row(rmin + 1));
+    return triangle_orientation(points.row(rmin - 1), points.row(rmin), points.row(rmin + 1));
 }
 
 Polygon::Polygon(Eigen::MatrixX2d points)
@@ -97,7 +97,7 @@ bool inside_polygon(const Eigen::Vector2d& point, const Polygon& polygon)
         }
     }
 
-    if (polygon.solid())
+    if (polygon.is_solid())
         return wn != 0;
 
     return wn == 0;

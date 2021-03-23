@@ -34,11 +34,11 @@ public:
         return _orientation;
     }
 
-    bool solid() const {
+    bool is_solid() const {
         return _orientation > 0;
     }
 
-    bool hollow() const {
+    bool is_hollow() const {
         return _orientation < 0;
     }
 };
