@@ -24,3 +24,12 @@ def test_inside_polygon():
     assert not inside_polygon(np.array([-.5, 1.5]), polygon)
     assert not inside_polygon(np.array([1.5, 1.5]), polygon)
     assert not inside_polygon(np.array([1.5, -.5]), polygon)
+
+    points = np.array([[0., 0.], [0., 1.], [1., 1.], [1., 0.]])
+    polygon = Polygon(points)
+
+    assert inside_polygon(np.array([.5, .5]), polygon)
+    assert not inside_polygon(np.array([-.5, -.5]), polygon)
+    assert not inside_polygon(np.array([-.5, 1.5]), polygon)
+    assert not inside_polygon(np.array([1.5, 1.5]), polygon)
+    assert not inside_polygon(np.array([1.5, -.5]), polygon)

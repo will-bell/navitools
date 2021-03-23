@@ -6,6 +6,7 @@
 class Polygon {
     Eigen::MatrixX2d _points;
     int _n_points;
+    int _orientation;
 
 public:
     Polygon(Eigen::MatrixX2d points);
@@ -22,6 +23,23 @@ public:
 
     int n_points() const {
         return _n_points;
+    }
+
+    /*  Orientation of the polygon
+        Returns: 
+            >0 if orientation is counter-clockwise
+            <0 if orientation is clockwise
+    */
+    int orientation() const {
+        return _orientation;
+    }
+
+    bool solid() const {
+        return _orientation > 0;
+    }
+
+    bool hollow() const {
+        return _orientation < 0;
     }
 };
 

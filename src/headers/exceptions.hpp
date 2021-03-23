@@ -1,3 +1,5 @@
+#pragma once
+
 #include <exception>
 
 /* Generic exception for when we have disagreeing state sizes */
