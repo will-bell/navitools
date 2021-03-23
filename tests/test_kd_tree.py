@@ -1,9 +1,9 @@
 from typing import List, Optional
 
 import numpy as np
-from _navipy import KD_Tree, BadStateSizeException, EmptyTreeException
+from _navipy import BadStateSizeException, EmptyTreeException, KD_Tree
 
-from tests.common import generate_test_points
+from navipy.testing import generate_test_points
 
 
 def test_build_tree():
@@ -67,8 +67,8 @@ class KBestLeaderboard:
     def __init__(self, k: int):
         self._k = k
         self._j = 0
-        self._value_list = [np.inf]*k
-        self._point_list = [None]*k
+        self._value_list = [np.inf] * k
+        self._point_list = [None] * k
 
     def insert(self, value: float, node: np.ndarray) -> None:
         for i in range(self._k):

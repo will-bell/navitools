@@ -3,7 +3,7 @@ import platform
 import subprocess
 import sys
 from pprint import pprint
-from setuptools import setup, Extension
+from setuptools import setup, Extension, find_packages
 from setuptools.command.build_ext import build_ext
 from typing import List
 
@@ -96,6 +96,7 @@ setup(
     author_email='wjbell97@gmail.com',
     keywords=['path planning', 'motion planning'],
     install_requires=['numpy>=1.15.1'],
+    packages=find_packages(exclude='tests'),
     ext_modules=[CMakeExtension(c_module_name)],
     cmdclass={'build_ext': CMakeBuild},
     zip_safe=False,

@@ -1,5 +1,5 @@
-from _navipy import PolygonSpace, Polygon, inside_polygon
 import numpy as np
+from _navipy import Polygon, PolygonSpace, inside_polygon
 
 
 def test_search_space_instantiation():

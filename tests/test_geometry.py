@@ -1,5 +1,5 @@
-from _navipy import Polygon, inside_polygon
 import numpy as np
+from _navipy import Polygon, inside_polygon
 
 
 def test_polygon_instantiation():
