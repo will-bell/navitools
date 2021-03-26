@@ -28,34 +28,35 @@ def square_distance(a: np.ndarray, b: np.ndarray) -> float:
 
 
 def test_tree_nearest_neighbor():
-    points = generate_test_points(n=1_000)
+    for _ in range(1000):
+        points = generate_test_points(n=100)
 
-    test_point = np.array([0., 0.])
+        test_point = np.array([0., 0.])
 
-    # Brute force search for the true nearest neighbor
-    nearest = points[0]
-    nearest_distance = square_distance(test_point, nearest)
-    for p in points[1:]:
-        dist = square_distance(test_point, p)
+        # Brute force search for the true nearest neighbor
+        nearest = points[0]
+        nearest_distance = square_distance(test_point, nearest)
+        for p in points[1:]:
+            dist = square_distance(test_point, p)
 
-        if dist < nearest_distance:
-            nearest = p
-            nearest_distance = dist
+            if dist < nearest_distance:
+                nearest = p
+                nearest_distance = dist
 
-    # With the constructor
-    tree = KD_Tree(points)
+        # With the constructor
+        tree = KD_Tree(points)
 
-    tree_nearest = tree.nearest_neighbor(test_point)
-    assert np.all(tree_nearest == nearest)
+        tree_nearest = tree.nearest_neighbor(test_point)
+        assert np.all(tree_nearest == nearest)
 
-    # Building iteratively
-    tree = KD_Tree(np.array([]))
+        # Building iteratively
+        tree = KD_Tree(np.array([]))
 
-    for point in points:
-        tree.append_state(point)
+        for point in points:
+            tree.append_state(point)
 
-    tree_nearest = tree.nearest_neighbor(test_point)
-    assert np.all(tree_nearest == nearest)
+        tree_nearest = tree.nearest_neighbor(test_point)
+        assert np.all(tree_nearest == nearest)
 
 
 class KBestLeaderboard:
@@ -110,27 +111,28 @@ def brute_force_k_nearest_neighbor(point: np.ndarray, point_list: np.ndarray, k:
     return np.vstack(leaderboard.point_list())
 
 
-def test_tree_k_nearest_neighbors(k: int = 100):
-    points = generate_test_points(n=1_000)
+def test_tree_k_nearest_neighbors(k: int = 10):
+    for _ in range(1000):
+        points = generate_test_points(n=100)
 
-    test_point = np.array([0., 0.])
+        test_point = np.array([0., 0.])
 
-    k_nearest = brute_force_k_nearest_neighbor(test_point, points, k)
+        k_nearest = brute_force_k_nearest_neighbor(test_point, points, k)
 
-    # With the constructor
-    tree = KD_Tree(points)
+        # With the constructor
+        tree = KD_Tree(points)
 
-    tree_k_nearest = tree.k_nearest_neighbors(test_point, k)
-    assert np.all(tree_k_nearest == k_nearest)
+        tree_k_nearest = tree.k_nearest_neighbors(test_point, k)
+        assert np.all(tree_k_nearest == k_nearest)
 
-    # Building iteratively
-    tree = KD_Tree(np.array([]))
+        # Building iteratively
+        tree = KD_Tree(np.array([]))
 
-    for point in points:
-        tree.append_state(point)
+        for point in points:
+            tree.append_state(point)
 
-    tree_k_nearest = tree.k_nearest_neighbors(test_point, k)
-    assert np.all(tree_k_nearest == k_nearest)
+        tree_k_nearest = tree.k_nearest_neighbors(test_point, k)
+        assert np.all(tree_k_nearest == k_nearest)
 
 
 def test_tree_exceptions():

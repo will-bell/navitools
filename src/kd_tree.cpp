@@ -157,17 +157,27 @@ void kdTree_nearest_neighbor(kdNode_ptr root, const Eigen::VectorXd& search_stat
         best_node = root;
     }
 
-    if (search_state[axis] < root->state[axis] && root->left) {
-        kdTree_nearest_neighbor(root->left, search_state, depth + 1, best_distance, best_node);
+    if (search_state[axis] < root->state[axis]) {
+        if (root->left) {
+            kdTree_nearest_neighbor(root->left, search_state, depth + 1, best_distance, best_node);
 
-        if (std::pow(std::abs(search_state[axis] - root->state[axis]), 2) < best_distance && root->right) {
+            if (std::pow(search_state[axis] - root->state[axis], 2) < best_distance && root->right) {
+                kdTree_nearest_neighbor(root->right, search_state, depth + 1, best_distance, best_node);
+            }
+        }
+        else if (root->right) {
             kdTree_nearest_neighbor(root->right, search_state, depth + 1, best_distance, best_node);
         }
     }
-    else if(search_state[axis] > root->state[axis] && root->right) {
-        kdTree_nearest_neighbor(root->right, search_state, depth + 1, best_distance, best_node);
+    else if(search_state[axis] > root->state[axis]) {
+        if (root->right) {
+            kdTree_nearest_neighbor(root->right, search_state, depth + 1, best_distance, best_node);
 
-        if (std::pow(std::abs(search_state[axis] - root->state[axis]), 2) < best_distance && root->left) {
+            if (std::pow(search_state[axis] - root->state[axis], 2) < best_distance && root->left) {
+                kdTree_nearest_neighbor(root->left, search_state, depth + 1, best_distance, best_node);
+            }
+        }
+        else if (root->left) {
             kdTree_nearest_neighbor(root->left, search_state, depth + 1, best_distance, best_node);
         }
     }

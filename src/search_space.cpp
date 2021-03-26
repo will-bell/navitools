@@ -19,3 +19,13 @@ Eigen::MatrixXd PolygonSpace::sample_free_space(int n)
 
     return samples;
 }
+
+bool PolygonSpace::straight_line_collision(const Eigen::VectorXd& a, const Eigen::VectorXd& b)
+{
+    std::pair<Eigen::VectorXd, Eigen::VectorXd> segment = {a, b};
+    for (auto polygon : _polygons) {
+        if (segment_intersects_polygon(segment, polygon) > 0)
+            return true;
+    }
+    return false;
+}

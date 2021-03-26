@@ -17,4 +17,6 @@ void init_geometry(py::module_ &m)
         .def("__getitem__", [](const Polygon& polygon, int i) {return polygon[i];});
 
     m.def("inside_polygon", &inside_polygon);
+    m.def("segments_intersect", &segments_intersect);
+    m.def("segment_intersects_polygon", &segment_intersects_polygon);
 }

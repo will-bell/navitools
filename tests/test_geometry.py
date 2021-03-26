@@ -1,5 +1,5 @@
 import numpy as np
-from _navipy import Polygon, inside_polygon
+from _navipy import Polygon, inside_polygon, segments_intersect
 
 
 def test_polygon_instantiation():
@@ -40,3 +40,25 @@ def test_inside_polygon():
     assert inside_polygon(np.array([-.5, 1.5]), polygon)
     assert inside_polygon(np.array([1.5, 1.5]), polygon)
     assert inside_polygon(np.array([1.5, -.5]), polygon)
+
+
+def test_segments_intersect():
+    ab = (np.array([0., 0.]), np.array([1., 1.]))
+    cd = (np.array([1., 0.]), np.array([0., 1.]))
+    assert segments_intersect(ab, cd) == 1
+
+    ab = (np.array([0., 0.]), np.array([.5, .5]))
+    cd = (np.array([1., 0.]), np.array([0., 1.]))
+    assert segments_intersect(ab, cd) == 1
+
+    ab = (np.array([0., 1.]), np.array([1., 1.]))
+    cd = (np.array([0., 0.]), np.array([1., 0.]))
+    assert segments_intersect(ab, cd) == 0
+
+    ab = (np.array([0., 1.]), np.array([1., 1.]))
+    cd = (np.array([0., 1.]), np.array([.5, 1.]))
+    assert segments_intersect(ab, cd) == 2
+
+    ab = (np.array([0., 1.]), np.array([.4, 1.]))
+    cd = (np.array([.5, 1.]), np.array([1., 1.]))
+    assert segments_intersect(ab, cd) == 0

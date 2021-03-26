@@ -45,3 +45,6 @@ public:
 
 bool inside_polygon(const Eigen::Vector2d& point, const Polygon& polygon);
 bool inside_any_polygon(const Eigen::Vector2d& point, const std::vector<Polygon>& polygons);
+
+int segments_intersect(const std::pair<Eigen::Vector2d, Eigen::Vector2d>& ab, const std::pair<Eigen::Vector2d, Eigen::Vector2d>& cd);
+int segment_intersects_polygon(const std::pair<Eigen::Vector2d, Eigen::Vector2d>& segment, const Polygon& polygon);

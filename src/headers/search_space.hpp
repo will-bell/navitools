@@ -11,6 +11,10 @@ class SearchSpace {
         virtual Eigen::MatrixXd sample_free_space(int n) {
             return {1, 1};
         }
+
+        virtual bool straight_line_collision(const Eigen::VectorXd& a, const Eigen::VectorXd& b) {
+            return true;
+        }
 };
 
 class PolygonSpace : SearchSpace {
@@ -44,4 +48,6 @@ class PolygonSpace : SearchSpace {
         }
 
         Eigen::MatrixXd sample_free_space(int n);
+
+        bool straight_line_collision(const Eigen::VectorXd& a, const Eigen::VectorXd& b);
 };
