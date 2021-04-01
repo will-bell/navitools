@@ -5,15 +5,15 @@ from navipy.testing import generate_test_points
 
 
 def test_roadmap_instantiation():
-    roadmap = RoadMap()
+    roadmap = RoadMap(2)
 
-    assert not len(roadmap.nodes())
+    assert not len(roadmap.nodes)
 
 
 def test_add_nodes_with_known_neighbors():
     points = generate_test_points(n=5)
 
-    roadmap = RoadMap()
+    roadmap = RoadMap(2)
 
     roadmap.add_node(points[0], np.array([]), np.array([]))
     roadmap.add_node(points[1], np.array([points[0]]), np.array([1.]))
@@ -21,7 +21,7 @@ def test_add_nodes_with_known_neighbors():
     roadmap.add_node(points[3], np.array([points[2]]), np.array([4.]))
     roadmap.add_node(points[4], np.array([points[2], points[3]]), np.array([5., 6.]))
 
-    assert len(roadmap.nodes()) == 5
+    assert len(roadmap.nodes) == 5
 
     node0 = roadmap.node_at(points[0])
     assert np.all(node0.state == points[0])
@@ -55,7 +55,7 @@ def test_add_nodes_with_discovered_neighbors(k: int = 5):
     new_state = points[0]
     states = points[1:]
 
-    roadmap = RoadMap()
+    roadmap = RoadMap(2)
 
     for state in states:
         roadmap.add_node(state, np.array([]), np.array([]))

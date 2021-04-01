@@ -2,20 +2,8 @@
 #include "roadmap.hpp"
 #include "exceptions.hpp"
 
-Eigen::VectorXd RoadmapNode::getState() const
-{
-    return state;
-}
-
-Eigen::MatrixXd RoadmapNode::getNeighbors() const
-{
-    return neighbors;
-}
-
-Eigen::VectorXd RoadmapNode::getCosts() const
-{
-    return costs;
-}
+// TODO: REMOVE
+#include <iostream>
 
 using MatrixXd_ptr = std::unique_ptr<Eigen::MatrixXd>;
 using VectorXd_ptr = std::unique_ptr<Eigen::VectorXd>;
@@ -23,24 +11,37 @@ using VectorXd_ptr = std::unique_ptr<Eigen::VectorXd>;
 void Roadmap::add_node(const Eigen::VectorXd& state, const Eigen::MatrixXd& neighborStates, 
     const Eigen::VectorXd& neighborCosts)
 {
+    if (get_state_size() < 0) {
+        set_state_size(state.size());
+        std::cout << "State size is " << state.size() << std::endl;
+    }
+    else if (state.size() != get_state_size()) {
+        throw BadStateSizeException{"Given state does not have the same size as the Roadmap's state space"};
+    }
+
     if (neighborStates.rows()) {
         std::vector<RoadmapNode*> nodes_to_modify;
         std::vector<MatrixXd_ptr> extended_neighbors_lists;
         std::vector<VectorXd_ptr> extended_costs_lists;
 
         for (int i=0; i < neighborStates.rows(); i++) {
+            if (neighborStates.row(i).size() != get_state_size())
+                throw BadStateSizeException{"Given neighbor state does not have the same size as the Roadmap's state space"};
+
             try {
                 RoadmapNode& node = roadmap.at(neighborStates.row(i));
                 
                 nodes_to_modify.push_back(&node);
 
-                MatrixXd_ptr extended_neighbors_list = std::make_unique<Eigen::MatrixXd>(node.neighbors);
-                VectorXd_ptr extended_costs_list = std::make_unique<Eigen::VectorXd>(node.costs);
+                MatrixXd_ptr extended_neighbors_list = std::make_unique<Eigen::MatrixXd>(node._neighbors);
+                VectorXd_ptr extended_costs_list = std::make_unique<Eigen::VectorXd>(node._costs);
 
                 int n_neighbors = extended_neighbors_list->rows();
                 if (!n_neighbors) {
+                    std::cout << "Resizing for state size = " << get_state_size() << std::endl;
+
                     // Give the arrays the right size
-                    extended_neighbors_list->conservativeResize(1, state.size());
+                    extended_neighbors_list->conservativeResize(1, get_state_size());
                     extended_costs_list->conservativeResize(1, 1);
 
                     // Assign the neighbor and cost
@@ -68,18 +69,21 @@ void Roadmap::add_node(const Eigen::VectorXd& state, const Eigen::MatrixXd& neig
         // Got through accessing all the states with no errors, so we can now connect them
         for (int i=0; i < neighborStates.rows(); i++) {
             RoadmapNode* node = nodes_to_modify[i];
-            node->neighbors = *(extended_neighbors_lists[i]);
-            node->costs = *(extended_costs_lists[i]);
+
+            node->set_neighbors(*(extended_neighbors_lists[i]));
+            node->set_costs(*(extended_costs_lists[i]));
         }
     }
     // Add the node to the map
     roadmap[state] = {state, neighborStates, neighborCosts};
 
+    increment_n_states();
+
     // Add the state to the k-d tree for quick searching
-    kdtree.append_state(state);
+    kdtree.append_state(state);  
 }
 
-std::vector<RoadmapNode> Roadmap::nodes() const
+std::vector<RoadmapNode> Roadmap::get_nodes() const
 {
     std::vector<RoadmapNode> nodeVector;
 
@@ -89,17 +93,27 @@ std::vector<RoadmapNode> Roadmap::nodes() const
     return nodeVector;
 }
 
+Eigen::MatrixXd Roadmap::get_states() const
+{
+    Eigen::MatrixXd states(get_n_states(), get_state_size());
+
+    int i = 0; 
+    for (auto it = roadmap.begin(); it != roadmap.end(); ++it, ++i)
+        states.row(i) = it->first;
+
+    return states;
+}
+
 RoadmapNode Roadmap::node_at(const Eigen::VectorXd& state) const 
 {
-    RoadmapNode node;
     try {
-        node = roadmap.at(state);
+        RoadmapNode node = roadmap.at(state);
+        
+        return node;
     }
     catch (const std::out_of_range& oor) {
         throw MissingStateRoadmapException{};
     }
-
-    return node;
 }
 
 RoadmapNode Roadmap::node_nearest(const Eigen::VectorXd& state) const 

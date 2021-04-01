@@ -11,14 +11,17 @@ void init_roadmap(py::module_& m)
 {
     py::class_<RoadmapNode>(m, "RoadMapNode")
         .def(py::init<>())
-        .def_property_readonly("state", &RoadmapNode::getState)
-        .def_property_readonly("neighbors", &RoadmapNode::getNeighbors)
-        .def_property_readonly("costs", &RoadmapNode::getCosts);
+        .def_property_readonly("state", &RoadmapNode::get_state)
+        .def_property_readonly("neighbors", &RoadmapNode::get_neighbors)
+        .def_property_readonly("costs", &RoadmapNode::get_costs);
 
     py::class_<Roadmap>(m, "RoadMap")
-        .def(py::init<>())
+        .def(py::init<int>())
+        .def_property_readonly("state_size", &Roadmap::get_state_size)
+        .def_property_readonly("n_states", &Roadmap::get_n_states)
+        .def_property_readonly("nodes", &Roadmap::get_nodes)
+        .def_property_readonly("states", &Roadmap::get_states)
         .def("add_node", &Roadmap::add_node)
-        .def("nodes", &Roadmap::nodes)
         .def("node_at", &Roadmap::node_at)
         .def("node_nearest", &Roadmap::node_nearest)
         .def("k_nodes_nearest", &Roadmap::k_nodes_nearest)
