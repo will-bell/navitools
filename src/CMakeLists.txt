@@ -4,6 +4,7 @@ set(CXX_SOURCES
     "kd_tree.cpp"
     "roadmap.cpp"
     "search_space.cpp"
+    "probabilistic_roadmap"
 )
 
 # Create the library

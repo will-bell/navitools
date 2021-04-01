@@ -33,6 +33,9 @@ struct RoadmapNode {
 typedef std::map<Eigen::VectorXd, RoadmapNode, std::function<bool(const Eigen::VectorXd&, const Eigen::VectorXd&)>> MapVectorXd;
 
 class Roadmap {
+    MapVectorXd roadmap;
+    kdTree kdtree;
+
 public:
     Roadmap() {
         roadmap = MapVectorXd {
@@ -55,8 +58,4 @@ public:
     Eigen::MatrixXd k_states_nearest(const Eigen::VectorXd& state, int k) const;
 
     std::vector<RoadmapNode> nodes() const;
-
-private:
-    MapVectorXd roadmap;
-    kdTree kdtree;
 };

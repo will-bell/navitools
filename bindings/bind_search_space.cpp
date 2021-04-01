@@ -11,6 +11,4 @@ void init_search_space(py::module_ &m)
     py::class_<PolygonSpace>(m, "PolygonSpace")
         .def(py::init<std::vector<Polygon>, std::pair<double, double>, std::pair<double, double>>())
         .def("sample_free_space", &PolygonSpace::sample_free_space);
-
-    m.def("inside_polygon", &inside_polygon);
 }

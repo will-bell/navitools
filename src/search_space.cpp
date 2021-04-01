@@ -2,7 +2,7 @@
 #include "search_space.hpp"
 
 
-Eigen::MatrixXd PolygonSpace::sample_free_space(int n) 
+Eigen::MatrixXd PolygonSpace::sample_free_space(int n) const
 {
     Eigen::MatrixXd samples(n, 2);
 
@@ -20,12 +20,18 @@ Eigen::MatrixXd PolygonSpace::sample_free_space(int n)
     return samples;
 }
 
-bool PolygonSpace::straight_line_collision(const Eigen::VectorXd& a, const Eigen::VectorXd& b)
+bool PolygonSpace::valid_transition(const Eigen::VectorXd& a, const Eigen::VectorXd& b) const
 {
     std::pair<Eigen::VectorXd, Eigen::VectorXd> segment = {a, b};
     for (auto polygon : _polygons) {
         if (segment_intersects_polygon(segment, polygon) > 0)
-            return true;
+            return false;
     }
-    return false;
+    return true;
+}
+
+double PolygonSpace::transition_cost(const Eigen::VectorXd& a, const Eigen::VectorXd& b) const
+{
+    Eigen::VectorXd ab = b - a;
+    return ab.dot(ab);
 }

@@ -17,51 +17,63 @@ Eigen::VectorXd RoadmapNode::getCosts() const
     return costs;
 }
 
+using MatrixXd_ptr = std::unique_ptr<Eigen::MatrixXd>;
+using VectorXd_ptr = std::unique_ptr<Eigen::VectorXd>;
+
 void Roadmap::add_node(const Eigen::VectorXd& state, const Eigen::MatrixXd& neighborStates, 
     const Eigen::VectorXd& neighborCosts)
 {
-    // Add the node to the map
-    roadmap[state] = {state, neighborStates, neighborCosts};
-
-    // Connect the node with its prescribed neighbors
     if (neighborStates.rows()) {
-        for (int i = 0; i < neighborStates.rows(); i++) {
-            // We will catch the error if a state is not in the map using std::map::at()
-            // Have to wrap this whole thing in the try/catch since we are getting a reference to
-            // the node out of std::map::at().
+        std::vector<RoadmapNode*> nodes_to_modify;
+        std::vector<MatrixXd_ptr> extended_neighbors_lists;
+        std::vector<VectorXd_ptr> extended_costs_lists;
+
+        for (int i=0; i < neighborStates.rows(); i++) {
             try {
-                // Get references to the neighbors and costs for the neighbor node
                 RoadmapNode& node = roadmap.at(neighborStates.row(i));
-                Eigen::MatrixXd& neighbors = node.neighbors;
                 
-                Eigen::VectorXd& costs = node.costs;
+                nodes_to_modify.push_back(&node);
 
-                int nNeighbors = neighbors.rows();
+                MatrixXd_ptr extended_neighbors_list = std::make_unique<Eigen::MatrixXd>(node.neighbors);
+                VectorXd_ptr extended_costs_list = std::make_unique<Eigen::VectorXd>(node.costs);
 
-                if (!nNeighbors) {
+                int n_neighbors = extended_neighbors_list->rows();
+                if (!n_neighbors) {
                     // Give the arrays the right size
-                    neighbors.conservativeResize(1, state.size());
-                    costs.conservativeResize(1, 1);
+                    extended_neighbors_list->conservativeResize(1, state.size());
+                    extended_costs_list->conservativeResize(1, 1);
 
                     // Assign the neighbor and cost
-                    neighbors.row(0) = state;
-                    costs.row(0) = neighborCosts.row(i);
+                    extended_neighbors_list->row(0) = state;
+                    extended_costs_list->row(0) = neighborCosts.row(i);
                 }
                 else {
                     // Append a neighbor to the node
-                    neighbors.conservativeResize(nNeighbors + 1, Eigen::NoChange);
-                    neighbors.row(nNeighbors) = state;
+                    extended_neighbors_list->conservativeResize(n_neighbors + 1, Eigen::NoChange);
+                    extended_neighbors_list->row(n_neighbors) = state;
                     
                     // Append a cost to the node that corresponds to the new neighbor
-                    costs.conservativeResize(nNeighbors + 1, Eigen::NoChange);
-                    costs.row(nNeighbors) = neighborCosts.row(i);
+                    extended_costs_list->conservativeResize(n_neighbors + 1, Eigen::NoChange);
+                    extended_costs_list->row(n_neighbors) = neighborCosts.row(i);
                 }
+
+                extended_neighbors_lists.push_back(std::move(extended_neighbors_list));
+                extended_costs_lists.push_back(std::move(extended_costs_list));
             }
             catch (const std::out_of_range& oor) {
                 throw MissingStateRoadmapException{};
             }
         }
+
+        // Got through accessing all the states with no errors, so we can now connect them
+        for (int i=0; i < neighborStates.rows(); i++) {
+            RoadmapNode* node = nodes_to_modify[i];
+            node->neighbors = *(extended_neighbors_lists[i]);
+            node->costs = *(extended_costs_lists[i]);
+        }
     }
+    // Add the node to the map
+    roadmap[state] = {state, neighborStates, neighborCosts};
 
     // Add the state to the k-d tree for quick searching
     kdtree.append_state(state);
