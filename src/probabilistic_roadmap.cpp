@@ -69,9 +69,3 @@ Roadmap build_prm(int n_samples, int n_batch, int k_neighbors, const SearchSpace
 
     return roadmap;
 }
-
-Roadmap testing_polygon_space_prm(int n_samples, int n_batch, int k_neighbors, std::pair<double, double> x_range, std::pair<double, double> y_range)
-{
-    PolygonSpace search_space = {{}, x_range, y_range};
-    return build_prm(n_samples, n_batch, k_neighbors, search_space);
-}

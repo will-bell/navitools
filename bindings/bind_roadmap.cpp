@@ -29,7 +29,6 @@ void init_roadmap(py::module_& m)
         .def("k_states_nearest", &Roadmap::k_states_nearest);
 
     m.def("build_prm", &build_prm);
-    m.def("testing_polygon_space_prm", &testing_polygon_space_prm);
 
     py::register_exception<MissingStateRoadmapException>(m, "MissingStateRoadmapException");
 }

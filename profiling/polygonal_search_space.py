@@ -62,7 +62,8 @@ def profile_build_prm(n_samples: int = 100, n_batch: int = 10, k_neighbors: int 
 
     runtimes = profile_function(n_trials, build_prm, (n_samples, n_batch, k_neighbors, search_space))
 
-    pretty_print_title(f'Profiling building PRM in polygon space: {n_samples} samples in space with {n_triangles * 3} vertices')
+    pretty_print_title(
+        f'Profiling building PRM in polygon space: {n_samples} samples in space with {n_triangles * 3} vertices')
     pretty_print_statistics(runtimes)
 
     if plot:

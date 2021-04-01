@@ -42,9 +42,10 @@ public:
 
 /* Roadmap class */
 
-typedef std::map<Eigen::VectorXd, RoadmapNode, std::function<bool(const Eigen::VectorXd&, const Eigen::VectorXd&)>> MapVectorXd;
+template <typename T>
+using MapVectorXd = std::map<Eigen::VectorXd, T, std::function<bool(const Eigen::VectorXd&, const Eigen::VectorXd&)>>;
 
-#define MAPVECTORXD MapVectorXd {                                           \
+#define MAPVECTORXD(T) MapVectorXd<T> {                                     \
             [](const Eigen::VectorXd& a, const Eigen::VectorXd& b)->bool    \
             {                                                               \
                 return std::lexicographical_compare(                        \
@@ -54,7 +55,7 @@ typedef std::map<Eigen::VectorXd, RoadmapNode, std::function<bool(const Eigen::V
         }                                                                   \
 
 class Roadmap {
-    MapVectorXd roadmap;
+    MapVectorXd<RoadmapNode> roadmap;
     kdTree kdtree;
 
     int _state_size = -1;
@@ -66,12 +67,12 @@ class Roadmap {
 
 public:
     Roadmap() {
-        roadmap = MAPVECTORXD;
+        roadmap = MAPVECTORXD(RoadmapNode);
         set_state_size(-1);
     }
 
     Roadmap(int state_size) {
-        roadmap = MAPVECTORXD;
+        roadmap = MAPVECTORXD(RoadmapNode);
         set_state_size(state_size);
     };
 
