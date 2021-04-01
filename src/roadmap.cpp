@@ -2,9 +2,6 @@
 #include "roadmap.hpp"
 #include "exceptions.hpp"
 
-// TODO: REMOVE
-#include <iostream>
-
 using MatrixXd_ptr = std::unique_ptr<Eigen::MatrixXd>;
 using VectorXd_ptr = std::unique_ptr<Eigen::VectorXd>;
 
@@ -13,7 +10,6 @@ void Roadmap::add_node(const Eigen::VectorXd& state, const Eigen::MatrixXd& neig
 {
     if (get_state_size() < 0) {
         set_state_size(state.size());
-        std::cout << "State size is " << state.size() << std::endl;
     }
     else if (state.size() != get_state_size()) {
         throw BadStateSizeException{"Given state does not have the same size as the Roadmap's state space"};
@@ -38,8 +34,6 @@ void Roadmap::add_node(const Eigen::VectorXd& state, const Eigen::MatrixXd& neig
 
                 int n_neighbors = extended_neighbors_list->rows();
                 if (!n_neighbors) {
-                    std::cout << "Resizing for state size = " << get_state_size() << std::endl;
-
                     // Give the arrays the right size
                     extended_neighbors_list->conservativeResize(1, get_state_size());
                     extended_costs_list->conservativeResize(1, 1);
