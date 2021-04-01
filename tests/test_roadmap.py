@@ -15,14 +15,21 @@ def test_add_nodes_with_known_neighbors():
 
     roadmap = Roadmap(2)
 
+    # Add nodes and connect them all by hand
     roadmap.add_node(points[0], np.array([]), np.array([]))
     roadmap.add_node(points[1], np.array([points[0]]), np.array([1.]))
     roadmap.add_node(points[2], np.array([points[0], points[1]]), np.array([2., 3.]))
     roadmap.add_node(points[3], np.array([points[2]]), np.array([4.]))
     roadmap.add_node(points[4], np.array([points[2], points[3]]), np.array([5., 6.]))
 
+    # Assert the number of nodes in the map is right
     assert len(roadmap.nodes) == 5
 
+    # Assert the states in the map are correct
+    states = roadmap.states
+    assert np.all(states[states[:, 0].argsort()] == points[points[:, 0].argsort()])
+
+    # Assert that we can find all the nodes by state lookup and that all the right connections exist
     node0 = roadmap.node_at(points[0])
     assert np.all(node0.state == points[0])
     assert np.all(node0.neighbors == np.array([points[1], points[2]]))

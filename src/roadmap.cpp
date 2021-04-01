@@ -71,10 +71,11 @@ void Roadmap::add_node(const Eigen::VectorXd& state, const Eigen::MatrixXd& neig
     // Add the node to the map
     roadmap[state] = {state, neighborStates, neighborCosts};
 
-    increment_n_states();
-
     // Add the state to the k-d tree for quick searching
     kdtree.append_state(state);  
+
+    // Increment the number of states in the roadmap
+    increment_n_states();
 }
 
 std::vector<RoadmapNode> Roadmap::get_nodes() const
