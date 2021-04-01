@@ -1,11 +1,11 @@
 import numpy as np
-from _navipy import RoadMap
+from _navipy import Roadmap
 
 from navipy.testing import generate_test_points
 
 
 def test_roadmap_instantiation():
-    roadmap = RoadMap(2)
+    roadmap = Roadmap(2)
 
     assert not len(roadmap.nodes)
 
@@ -13,7 +13,7 @@ def test_roadmap_instantiation():
 def test_add_nodes_with_known_neighbors():
     points = generate_test_points(n=5)
 
-    roadmap = RoadMap(2)
+    roadmap = Roadmap(2)
 
     roadmap.add_node(points[0], np.array([]), np.array([]))
     roadmap.add_node(points[1], np.array([points[0]]), np.array([1.]))
@@ -55,7 +55,7 @@ def test_add_nodes_with_discovered_neighbors(k: int = 5):
     new_state = points[0]
     states = points[1:]
 
-    roadmap = RoadMap(2)
+    roadmap = Roadmap(2)
 
     for state in states:
         roadmap.add_node(state, np.array([]), np.array([]))

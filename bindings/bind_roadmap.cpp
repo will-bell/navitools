@@ -9,13 +9,13 @@ namespace py = pybind11;
 
 void init_roadmap(py::module_& m)
 {
-    py::class_<RoadmapNode>(m, "RoadMapNode")
+    py::class_<RoadmapNode>(m, "RoadmapNode")
         .def(py::init<>())
         .def_property_readonly("state", &RoadmapNode::get_state)
         .def_property_readonly("neighbors", &RoadmapNode::get_neighbors)
         .def_property_readonly("costs", &RoadmapNode::get_costs);
 
-    py::class_<Roadmap>(m, "RoadMap")
+    py::class_<Roadmap>(m, "Roadmap")
         .def(py::init<int>())
         .def_property_readonly("state_size", &Roadmap::get_state_size)
         .def_property_readonly("n_states", &Roadmap::get_n_states)
