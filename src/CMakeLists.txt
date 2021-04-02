@@ -5,6 +5,7 @@ set(CXX_SOURCES
     "roadmap.cpp"
     "search_space.cpp"
     "probabilistic_roadmap"
+    "search_roadmap"
 )
 
 # Create the library

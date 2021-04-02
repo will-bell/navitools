@@ -30,5 +30,7 @@ void init_roadmap(py::module_& m)
 
     m.def("build_prm", &build_prm);
 
+    m.def("dijkstra", &dijkstra);
+
     py::register_exception<MissingStateRoadmapException>(m, "MissingStateRoadmapException");
 }

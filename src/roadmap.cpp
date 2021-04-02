@@ -99,12 +99,20 @@ Eigen::MatrixXd Roadmap::get_states() const
     return states;
 }
 
+const RoadmapNode& Roadmap::ref_node_at(const Eigen::VectorXd& state) const
+{
+    try {
+        return roadmap.at(state);
+    }
+    catch (const std::out_of_range& oor) {
+        throw MissingStateRoadmapException{};
+    }
+}
+
 RoadmapNode Roadmap::node_at(const Eigen::VectorXd& state) const 
 {
     try {
-        RoadmapNode node = roadmap.at(state);
-        
-        return node;
+        return roadmap.at(state);
     }
     catch (const std::out_of_range& oor) {
         throw MissingStateRoadmapException{};

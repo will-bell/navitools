@@ -5,7 +5,6 @@ set(
     "bind_kd_tree.cpp"
     "bind_roadmap.cpp"
     "bind_search_space.cpp"
-    "bind_probabilistic_roadmap.cpp"
     )
 
 # Create the module using pybind11's wrapped version of `add_library`

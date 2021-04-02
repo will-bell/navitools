@@ -27,8 +27,14 @@ class RoadmapNode {
     void set_neighbors(const Eigen::MatrixXd& value) {_neighbors = value;}
     void set_costs(const Eigen::VectorXd& value) {_costs = value;}
 
-    // Give Roadmap access to the node's private members
+    // Private functions that return references
+    const Eigen::VectorXd& ref_state() const {return _state;}
+    const Eigen::MatrixXd& ref_neighbors() const {return _neighbors;}
+    const Eigen::VectorXd& ref_costs() const {return _costs;}
+
+    // Give Roadmap and search algorithms access to the node's private members
     friend class Roadmap;
+    friend Eigen::MatrixXd dijkstra(const Roadmap& roadmap, const Eigen::VectorXd& start_state, const Eigen::VectorXd& goal_state);
 
 public:
     RoadmapNode() {};
@@ -65,6 +71,12 @@ class Roadmap {
     void set_state_size(int value) {_state_size = value;}
     void increment_n_states() {_n_states++;}
 
+    // Private functions that return references for speed
+    const RoadmapNode& ref_node_at(const Eigen::VectorXd& state) const;
+
+    // Give search functions special access to get references for speed
+    friend Eigen::MatrixXd dijkstra(const Roadmap& roadmap, const Eigen::VectorXd& start_state, const Eigen::VectorXd& goal_state);
+
 public:
     Roadmap() {
         roadmap = MAPVECTORXD(RoadmapNode);
@@ -91,3 +103,5 @@ public:
     std::vector<RoadmapNode> get_nodes() const;
     Eigen::MatrixXd get_states() const;
 };
+
+Eigen::MatrixXd dijkstra(const Roadmap& roadmap, const Eigen::VectorXd& start_state, const Eigen::VectorXd& goal_state);
