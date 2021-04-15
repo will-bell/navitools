@@ -47,6 +47,7 @@ class CMakeBuild(build_ext):
             "-DCMAKE_BUILD_TYPE={}".format(cfg),  # not used on MSVC, but no harm
         ]
         build_args = []
+        cmake_pre_args = []
 
         if self.compiler.compiler_type != "msvc":
             # Using Ninja-build since it a) is available as a wheel and b)
@@ -57,7 +58,7 @@ class CMakeBuild(build_ext):
             if not cmake_generator:
                 cmake_args += ["-GNinja"]
 
-            cmake_args += ["-fPIC"]
+            cmake_pre_args += "-fPIC"
 
         else:
 
@@ -93,7 +94,7 @@ class CMakeBuild(build_ext):
             os.makedirs(self.build_temp)
 
         subprocess.check_call(
-            ["cmake", ext.sourcedir] + cmake_args, cwd=self.build_temp
+            ["cmake"] + cmake_pre_args + [ext.sourcedir] + cmake_args, cwd=self.build_temp
         )
         subprocess.check_call(
             ["cmake", "--build", "."] + build_args, cwd=self.build_temp
