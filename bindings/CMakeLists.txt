@@ -10,6 +10,8 @@ set(
 # Create the module using pybind11's wrapped version of `add_library`
 pybind11_add_module(_navipy ${BINDINGS_SRCS} module.cpp)
 
+set_property(TARGET _navipy PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 # Include the C++ source header files
 target_include_directories(_navipy PUBLIC ${CXX_SOURCE_DIR}/headers)
 
