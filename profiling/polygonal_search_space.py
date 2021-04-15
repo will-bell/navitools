@@ -1,5 +1,6 @@
 from math import ceil
 from typing import List, Tuple
+import random
 
 try:
     import matplotlib.pyplot as plt
@@ -7,7 +8,7 @@ except ImportError:
     raise ImportError('Currently using matplotlib to plot results, please install')
     
 import numpy as np
-from navitools import Polygon, PolygonSpace, Roadmap, build_prm
+from navitools import Polygon, PolygonSpace, Roadmap, build_prm, dijkstra
 from navitools.testing import make_random_triangles
 
 from reporting import (pretty_print_statistics, pretty_print_title,
@@ -80,6 +81,41 @@ def profile_build_prm(n_samples: int = 100, n_batch: int = 10, k_neighbors: int 
         plt.show()
 
 
+def profile_djikstra(n_samples: int = 1000, n_batch: int = 10, k_neighbors: int = 10, min_n_vertices: int = 100,
+                     xrange: Tuple[float, float] = (-10, 10), yrange: Tuple[float, float] = (-10, 10),
+                     n_trials: int = 10, plot: bool = False):
+
+    n_triangles = ceil(min_n_vertices / 3)
+    triangles = make_random_triangles(n_triangles, xrange, yrange)
+
+    search_space = PolygonSpace(triangles, xrange, yrange)
+
+    roadmap = build_prm(n_samples, n_batch, k_neighbors, search_space)
+
+    paths = []
+    start = random.choice(roadmap.states)
+
+    def dijkstra_random_start_goal(roadmap, start, paths):
+        goal = random.choice(roadmap.states)
+        path = dijkstra(roadmap, start, goal)
+        paths.append(path)
+
+    runtimes = profile_function(n_trials, dijkstra_random_start_goal, (roadmap, start, paths))
+
+    pretty_print_title(
+        f'Profiling Dijkstra search algorithm in polygonal space: {n_samples} samples in space with {n_triangles * 3} vertices')
+    pretty_print_statistics(runtimes)
+
+    if plot:
+        _, ax = plt.subplots()
+        ax.plot(start[0], start[1], 'ob')
+        plot_triangles(ax, triangles)
+        for path in paths:
+            ax.plot(path[:, 0], path[:, 1])
+            ax.plot(path[-1, 0], path[-1, 1], 'or')
+        plt.show()
+
 if __name__ == '__main__':
-    profile_sampling(plot=True)
-    profile_build_prm(n_samples=1000, plot=True)
+    # profile_sampling(plot=True)
+    # profile_build_prm(n_samples=1000, plot=True)
+    profile_djikstra(plot=True)
