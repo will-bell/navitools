@@ -60,6 +60,8 @@ using MapVectorXd = std::map<Eigen::VectorXd, T, std::function<bool(const Eigen:
             }                                                               \
         }                                                                   \
 
+class Roadmap;
+
 class Roadmap {
     MapVectorXd<RoadmapNode> roadmap;
     kdTree kdtree;
