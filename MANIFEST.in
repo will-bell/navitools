@@ -1,0 +1,20 @@
+global-include CMakeLists.txt
+
+recursive-include external *
+include ./ *.py
+include ./ VERSION
+include ./ *.cmake
+
+graft src
+graft src/headers
+graft bindings
+graft navipy
+graft cmake
+
+global-exclude *.py[cod]
+global-exclude *.git
+global-exclude *.js
+global-exclude *.html
+global-exclude *.png
+global-exclude *.dox
+global-exclude __pycache__
