@@ -7,8 +7,8 @@ except ImportError:
     raise ImportError('Currently using matplotlib to plot results, please install')
     
 import numpy as np
-from _navipy import Polygon, PolygonSpace, Roadmap, build_prm
-from navipy.testing import make_random_triangles
+from navitools import Polygon, PolygonSpace, Roadmap, build_prm
+from navitools.testing import make_random_triangles
 
 from reporting import (pretty_print_statistics, pretty_print_title,
                        profile_function)
@@ -81,5 +81,5 @@ def profile_build_prm(n_samples: int = 100, n_batch: int = 10, k_neighbors: int 
 
 
 if __name__ == '__main__':
-    profile_sampling(plot=False)
-    profile_build_prm(n_samples=1000, plot=False)
+    profile_sampling(plot=True)
+    profile_build_prm(n_samples=1000, plot=True)

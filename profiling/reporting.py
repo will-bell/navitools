@@ -4,7 +4,7 @@ from typing import Callable
 import numpy as np
 
 
-def profile_function(n_trials: int, func: Callable, args: tuple, kwargs: dict = {}) -> np.ndarray:
+def profile_function(n_trials: int, func: Callable, args: tuple = (), kwargs: dict = {}) -> np.ndarray:
     runtimes = []
     for _ in range(n_trials):
         start = time.time()
