@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 env:
   # Only build on Windows Python 3.6 for now
-  CIBW_BUILD: cp36-win*
+  CIBW_BUILD: cp36*
 
 jobs:
   build_wheels:
@@ -12,8 +12,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-#         os: [ubuntu-20.04, windows-2019, macOS-10.15]
-        os: [windows-2019]
+        os: [ubuntu-20.04, windows-2019, macOS-10.15]
 
     steps:
       - uses: actions/checkout@v2
