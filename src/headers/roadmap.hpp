@@ -17,6 +17,8 @@ struct MissingStateRoadmapException : public std::exception
 
 /* Roadmap Node class */
 
+class Roadmap;
+
 class RoadmapNode {
     Eigen::VectorXd _state;
     Eigen::MatrixXd _neighbors;
@@ -59,8 +61,6 @@ using MapVectorXd = std::map<Eigen::VectorXd, T, std::function<bool(const Eigen:
                     b.data(), b.data() + b.size());                         \
             }                                                               \
         }                                                                   \
-
-class Roadmap;
 
 class Roadmap {
     MapVectorXd<RoadmapNode> roadmap;
