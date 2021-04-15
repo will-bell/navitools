@@ -1,8 +1,8 @@
 from math import ceil
 from typing import Tuple
 
-from navipy import PolygonSpace, build_prm, inside_polygon, segments_intersect
-from navipy.testing import make_random_triangles
+from navitools import PolygonSpace, build_prm, inside_polygon, segments_intersect
+from navitools.testing import make_random_triangles
 
 
 def test_build_prm(n_samples: int = 100, n_batch: int = 10, k_neighbors: int = 10, min_n_vertices: int = 100,

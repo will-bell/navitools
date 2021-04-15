@@ -8,18 +8,18 @@ set(
     )
 
 # Create the module using pybind11's wrapped version of `add_library`
-pybind11_add_module(_navipy ${BINDINGS_SRCS} module.cpp)
+pybind11_add_module(_navitools ${BINDINGS_SRCS} module.cpp)
 
-set_property(TARGET _navipy PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET _navitools PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 # Include the C++ source header files
-target_include_directories(_navipy PUBLIC ${CXX_SOURCE_DIR}/headers)
+target_include_directories(_navitools PUBLIC ${CXX_SOURCE_DIR}/headers)
 
 # Include the Eigen headers
-target_link_libraries(navipy Eigen3::Eigen)
+target_link_libraries(navitools Eigen3::Eigen)
 
 # Link the Python bindings with the source
-target_link_libraries(_navipy PUBLIC navipy)
+target_link_libraries(_navitools PUBLIC navitools)
 
 # Pass the Version info from setup.py to the module
-target_compile_definitions(_navipy PRIVATE VERSION_INFO=${NAVIPY_VERSION_INFO}) 
+target_compile_definitions(_navitools PRIVATE VERSION_INFO=${NAVITOOLS_VERSION_INFO}) 

@@ -1,9 +1,9 @@
 from typing import List, Optional
 
 import numpy as np
-from navipy import BadStateSizeException, EmptyTreeException, KD_Tree
+from navitools import BadStateSizeException, EmptyTreeException, KD_Tree
 
-from navipy.testing import generate_test_points
+from navitools.testing import generate_test_points
 
 
 def test_build_tree():
