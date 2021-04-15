@@ -98,14 +98,14 @@ class CMakeBuild(build_ext):
         )
 
 setup(
-    name='navipy',
+    name='navitools',
     version='0.0.1',
     description='Some bread-and-butter algorithms for motion planning',
     author='William Bell',
     author_email='wjbell97@gmail.com',
     keywords=['path planning', 'motion planning'],
     packages=find_packages(exclude='tests'),
-    ext_modules=[CMakeExtension("_navipy")],
+    ext_modules=[CMakeExtension("_navitools")],
     cmdclass={'build_ext': CMakeBuild},
     zip_safe=False,
     classifiers=[

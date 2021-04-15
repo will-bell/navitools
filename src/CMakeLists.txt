@@ -9,12 +9,12 @@ set(CXX_SOURCES
 )
 
 # Create the library
-add_library(navipy STATIC ${CXX_SOURCES})
+add_library(navitools STATIC ${CXX_SOURCES})
 
-set_property(TARGET navipy PROPERTY POSITION_INDEPENDENT_CODE ON)
+set_property(TARGET navitools PROPERTY POSITION_INDEPENDENT_CODE ON)
 
 # Headers are in the subdirectory
-target_include_directories(navipy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/headers)
+target_include_directories(navitools PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/headers)
 
 # Include the Eigen headers
-target_link_libraries(navipy Eigen3::Eigen)
+target_link_libraries(navitools Eigen3::Eigen)

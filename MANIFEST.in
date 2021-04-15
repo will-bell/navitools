@@ -8,7 +8,7 @@ include ./ *.cmake
 graft src
 graft src/headers
 graft bindings
-graft navipy
+graft navitools
 graft cmake
 
 global-exclude *.py[cod]

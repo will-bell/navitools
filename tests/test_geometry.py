@@ -1,5 +1,5 @@
 import numpy as np
-from navipy import Polygon, inside_polygon, segments_intersect
+from navitools import Polygon, inside_polygon, segments_intersect
 
 
 def test_polygon_instantiation():

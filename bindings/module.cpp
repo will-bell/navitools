@@ -10,7 +10,7 @@ void init_kd_tree(py::module_ &);
 void init_roadmap(py::module_ &);
 void init_search_space(py::module_ &);
 
-PYBIND11_MODULE(_navipy, m)
+PYBIND11_MODULE(_navitools, m)
 {   
     init_geometry(m);
     init_kd_tree(m);
