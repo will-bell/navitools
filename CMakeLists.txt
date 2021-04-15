@@ -20,7 +20,7 @@ add_subdirectory(src)
 
 # Find the right Python interpreter
 set(Python_FIND_VIRTUALENV FIRST)
-find_package(PythonInterp 3.5 REQUIRED)
+find_package(PythonInterp 3.6 REQUIRED)
 
 # Find the NumPy headers
 exec_program(
