@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 import numpy as np
-from _navipy import BadStateSizeException, EmptyTreeException, KD_Tree
+from navipy import BadStateSizeException, EmptyTreeException, KD_Tree
 
 from navipy.testing import generate_test_points
 

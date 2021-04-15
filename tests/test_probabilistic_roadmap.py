@@ -1,7 +1,7 @@
 from math import ceil
 from typing import Tuple
 
-from _navipy import PolygonSpace, build_prm, inside_polygon, segments_intersect
+from navipy import PolygonSpace, build_prm, inside_polygon, segments_intersect
 from navipy.testing import make_random_triangles
 
 

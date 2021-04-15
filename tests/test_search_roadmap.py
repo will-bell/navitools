@@ -2,8 +2,7 @@ from random import choices
 from typing import Tuple
 
 import numpy as np
-
-from _navipy import PolygonSpace, build_prm, dijkstra
+from navipy import PolygonSpace, build_prm, dijkstra
 
 
 def test_dijkstra(xrange: Tuple[float, float] = (-10, 10), yrange: Tuple[float, float] = (-10, 10)):

@@ -1,7 +1,11 @@
 from math import ceil
 from typing import List, Tuple
 
-import matplotlib.pyplot as plt
+try:
+    import matplotlib.pyplot as plt
+except ImportError:
+    raise ImportError('Currently using matplotlib to plot results, please install')
+    
 import numpy as np
 from _navipy import Polygon, PolygonSpace, Roadmap, build_prm
 from navipy.testing import make_random_triangles

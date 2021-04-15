@@ -3,9 +3,10 @@ import platform
 import subprocess
 import sys
 from pprint import pprint
-from setuptools import setup, Extension, find_packages
-from setuptools.command.build_ext import build_ext
 from typing import List
+
+from setuptools import Extension, find_packages, setup
+from setuptools.command.build_ext import build_ext
 
 # Filename for the C extension module library
 c_module_name = '_navipy'

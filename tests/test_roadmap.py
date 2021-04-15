@@ -1,6 +1,5 @@
 import numpy as np
-from _navipy import Roadmap
-
+from navipy import Roadmap
 from navipy.testing import generate_test_points
 
 

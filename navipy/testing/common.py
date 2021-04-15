@@ -3,7 +3,7 @@ from random import uniform
 from typing import List, Tuple
 
 import numpy as np
-from _navipy import Polygon
+from navipy import Polygon
 
 
 def generate_test_points(n: int = 1_000, size: int = 2, min_val: float = -100, max_val: float = 100) -> np.ndarray:
