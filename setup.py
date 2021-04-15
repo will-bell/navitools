@@ -96,7 +96,6 @@ setup(
     author='William Bell',
     author_email='wjbell97@gmail.com',
     keywords=['path planning', 'motion planning'],
-    install_requires=['numpy>=1.15.1'],
     packages=find_packages(exclude='tests'),
     ext_modules=[CMakeExtension(c_module_name)],
     cmdclass={'build_ext': CMakeBuild},
