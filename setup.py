@@ -57,6 +57,8 @@ class CMakeBuild(build_ext):
             if not cmake_generator:
                 cmake_args += ["-GNinja"]
 
+            cmake_args += ["-fPIC"]
+
         else:
 
             # Single config generators are handled "normally"
