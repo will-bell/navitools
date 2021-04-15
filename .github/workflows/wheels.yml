@@ -3,8 +3,8 @@ name: Build
 on: [push, pull_request]
 
 env:
-  # Skip Python 2.7 builds
-  CIBW_SKIP: cp27-*
+  # Only build on Python 3.6 for now
+  CIBW_BUILD: cp36-*
 
 jobs:
   build_wheels:
