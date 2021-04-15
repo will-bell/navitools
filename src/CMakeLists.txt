@@ -11,6 +11,8 @@ set(CXX_SOURCES
 # Create the library
 add_library(navipy STATIC ${CXX_SOURCES})
 
+set_property(TARGET navipy PROPERTY POSITION_INDEPENDENT_CODE ON)
+
 # Headers are in the subdirectory
 target_include_directories(navipy PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/headers)
 
