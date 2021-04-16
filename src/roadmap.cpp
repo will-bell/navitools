@@ -2,6 +2,7 @@
 #include "roadmap.hpp"
 #include "exceptions.hpp"
 
+
 using MatrixXd_ptr = std::unique_ptr<Eigen::MatrixXd>;
 using VectorXd_ptr = std::unique_ptr<Eigen::VectorXd>;
 

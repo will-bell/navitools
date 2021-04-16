@@ -1,27 +1,19 @@
-from math import ceil
-from typing import List, Tuple
 import random
+from math import ceil
+from typing import Tuple
+
+from common import plot_connections, plot_points, plot_triangles
 
 try:
     import matplotlib.pyplot as plt
 except ImportError:
     raise ImportError('Currently using matplotlib to plot results, please install')
     
-import numpy as np
-from navitools import Polygon, PolygonSpace, Roadmap, build_prm, dijkstra
+from navitools import PolygonSpace, build_prm, dijkstra
 from navitools.testing import make_random_triangles
 
 from reporting import (pretty_print_statistics, pretty_print_title,
                        profile_function)
-
-
-def plot_triangles(ax, triangles: List[Polygon]):
-    for triangle in triangles:
-        ax.fill(triangle.points[:, 0], triangle.points[:, 1])
-
-
-def plot_points(ax, points: np.ndarray):
-    ax.plot(points[:, 0], points[:, 1], 'ob')
 
 
 def profile_sampling(n_samples: int = 1_000, min_n_vertices: int = 1_000, xrange: Tuple[float, float] = (-10, 10),
@@ -47,13 +39,6 @@ def profile_sampling(n_samples: int = 1_000, min_n_vertices: int = 1_000, xrange
         plot_points(ax, samples)
         plot_triangles(ax, triangles)
         plt.show()
-
-
-def plot_connections(ax, roadmap: Roadmap):
-    for state in roadmap.states:
-        node = roadmap.node_at(state)
-        for neighbor_state in node.neighbors:
-            ax.plot([state[0], neighbor_state[0]], [state[1], neighbor_state[1]], '-b')
 
 
 def profile_build_prm(n_samples: int = 100, n_batch: int = 10, k_neighbors: int = 10, min_n_vertices: int = 100,
@@ -114,6 +99,7 @@ def profile_djikstra(n_samples: int = 1000, n_batch: int = 10, k_neighbors: int 
             ax.plot(path[:, 0], path[:, 1])
             ax.plot(path[-1, 0], path[-1, 1], 'or')
         plt.show()
+
 
 if __name__ == '__main__':
     # profile_sampling(plot=True)

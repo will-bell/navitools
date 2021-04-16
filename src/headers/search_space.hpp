@@ -4,12 +4,17 @@
 #include <Eigen/Core>
 #include "geometry.hpp"
 
-#include <iostream>
 
 class SearchSpace {
     int _state_size;
 
     public:
+        SearchSpace() {}
+
+        SearchSpace(int state_size) {
+            set_state_size(state_size);
+        }
+
         virtual Eigen::MatrixXd sample_free_space(int n) const {
             return {1, 1};
         }

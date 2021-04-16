@@ -4,6 +4,7 @@
 #include <math.h>
 #include <numeric>
 
+
 /*  Tests if a point is left|on|right of an infinite line
     
     Input: three points p0, p1, p2

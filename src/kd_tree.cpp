@@ -4,6 +4,7 @@
 #include "kd_tree.hpp"
 #include "exceptions.hpp"
 
+
 using kdNode_ptr = std::shared_ptr<kdNode>;
 
 /* Algorithm Implementation */

@@ -3,6 +3,7 @@
 #include <queue>
 #include "roadmap.hpp"
 
+
 struct pairCompare {
     bool operator()(const std::pair<Eigen::VectorXd, double>& a, const std::pair<Eigen::VectorXd, double>& b) {
         return a.second > b.second;

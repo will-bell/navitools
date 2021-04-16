@@ -3,6 +3,7 @@
 #include "kd_tree.hpp"
 #include "exceptions.hpp"
 
+
 namespace py = pybind11;
 
 void init_kd_tree(py::module_ &m)

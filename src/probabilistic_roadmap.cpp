@@ -1,11 +1,13 @@
 #include "probabilistic_roadmap.hpp"
 
+
 Roadmap build_prm(int n_samples, int n_batch, int k_neighbors, const SearchSpace& search_space)
 {
     Roadmap roadmap;    // Roadmap that we are going to produce
 
     // Get an initial sampling of the space to kick off the roadmap generation
     Eigen::MatrixXd initial_samples = search_space.sample_free_space(n_batch);
+
     for (int i=0; i < n_batch; i++) {
         Eigen::MatrixXd empty_neighbors(0, 0);
         Eigen::VectorXd empty_costs(0);
