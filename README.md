@@ -12,7 +12,7 @@ Algorithms:
 - Dijkstra search
 
 # Installation
-This package is installable from the Python Package Index for Ubuntu, MacOS, and Windows! Currently supports only Python 3.6, but support for many more Python versions is planned.
+This package is installable from the Python Package Index for Ubuntu, MacOS, and Windows! Currently only Python 3.6 is supported, but support for many more Python versions is planned (>=3.7 coming in the next few updates and 2.7 in the near future).
 
 ```
 pip install navitools
