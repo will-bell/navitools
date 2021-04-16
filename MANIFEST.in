@@ -10,6 +10,7 @@ graft src/headers
 graft bindings
 graft navitools
 graft cmake
+graft extern
 
 global-exclude *.py[cod]
 global-exclude *.git
