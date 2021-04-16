@@ -12,7 +12,7 @@ Algorithms:
 - Dijkstra search
 
 # Installation
-This package is installable from the Python Package Index for Ubuntu, MacOS, and Windows! Currently only Python 3.6 is supported, but support for many more Python versions is planned (>=3.7 coming in the next few updates and 2.7 in the near future).
+This package is installable from the Python Package Index for Ubuntu, MacOS, and Windows! Currently only Python >=3.6 is supported, but support for Python 2.7 is also planned for the near future.
 
 ```
 pip install navitools
@@ -26,7 +26,7 @@ cd navitools
 pip install .
 ```
 
-If you wish to test you installation and run examples, then also clone this repository. `pytest` is used for running the unit tests, and `matplotlib` is currently used to plot the results in the examples. As with any Python project, the use of virtual environments is strongly recommended.
+If you wish to test your installation and run examples, then also clone this repository. `pytest` is used for running the unit tests, and `matplotlib` is currently used to plot the results in the examples. As with any Python project, the use of virtual environments is strongly recommended.
 
 ```
 git clone https://github.com/will-bell/navitools.git
