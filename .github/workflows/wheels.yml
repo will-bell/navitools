@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 env:
   # Only build on Windows Python >=3.6 for now
-  CIBW_SKIP: cp27* cp35*
+  CIBW_SKIP: cp27* cp35*j pp27* pp35*
 
 jobs:
   build_wheels:
