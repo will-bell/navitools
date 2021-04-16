@@ -99,7 +99,7 @@ class CMakeBuild(build_ext):
 
 setup(
     name='navitools',
-    version='0.0.1',
+    version='0.0.2',
     description='Some bread-and-butter algorithms for motion planning',
     author='William Bell',
     author_email='wjbell97@gmail.com',
