@@ -1,3 +1,5 @@
+[![Build](https://github.com/will-bell/navitools/actions/workflows/wheels.yml/badge.svg)](https://github.com/will-bell/navitools/actions/workflows/wheels.yml)
+
 # Overview
 Modular tools for path/motion planning in n-dimensional configuration spaces
 
